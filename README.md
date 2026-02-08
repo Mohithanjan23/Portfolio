@@ -35,7 +35,6 @@ Responsive: optimized for all devices, from mobile to 4k desktops.
 This project leverages a modern tech stack to ensure performance, scalability, and a smooth developer experience.
 
 Category
-
 Technologies
 
 ### Frontend
@@ -74,21 +73,17 @@ cd Portfolio
 
 ### Install dependencies
 
-npm install
-# or
-yarn install
+npm install or yarn install
 
 
-Start the development server
+### Start the development server
 
-npm start
-# or
-yarn start
+npm start or yarn start
 
 
 Open http://localhost:3000 to view it in the browser.
 
-📂 Directory Structure
+## 📂 Directory Structure
 
 Portfolio/
 ├── public/          # Static assets
@@ -104,11 +99,8 @@ Portfolio/
 ## 🌟 Features
 
 Dynamic Project Showcase: Filters for Web, App, and Design projects.
-
 Dark Mode Support: Because every developer loves dark mode.
-
 Contact Integration: Direct links to my social platforms.
-
 Animations: Smooth transitions powered by CSS and JS.
 
 ## 📬 Contact
