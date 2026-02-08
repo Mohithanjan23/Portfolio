@@ -3,749 +3,744 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mohithanjan | Creative Developer</title>
+    <meta name="description" content="Mohith H - The Operator's Log | Full Stack Developer">
+    <title>Mohith H | MISSION_LOGS</title>
     
+    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
     
+    <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Outfit:wght@200;400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        ops: {
+                            bg: '#050505',
+                            panel: '#0a0a0a',
+                            green: '#00ff41',
+                            greenDim: 'rgba(0, 255, 65, 0.1)',
+                            cyan: '#00f3ff',
+                            gold: '#ffd700',
+                            crimson: '#dc2626',
+                            purple: '#a855f7',
+                            pink: '#ec4899',
+                            text: '#a3a3a3'
+                        }
+                    },
+                    fontFamily: {
+                        header: ['"Black Ops One"', 'cursive'],
+                        body: ['"Rajdhani"', 'sans-serif'],
+                        code: ['"Share Tech Mono"', 'monospace'],
+                        log: ['"VT323"', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
 
     <style>
-        :root {
-            --bg-dark: #030305;
-            --card-bg: rgba(255, 255, 255, 0.02);
-            --card-border: rgba(255, 255, 255, 0.1); 
-            
-            --accent-primary: #3b82f6;
-            --accent-secondary: #10b981; 
-            --text-main: #ffffff;
-            --text-muted: #9ca3af;
-        }
-
         body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: 'Space Grotesk', sans-serif;
+            background-color: #050505;
+            color: #a3a3a3;
+            cursor: none; /* Custom cursor */
             overflow-x: hidden;
         }
 
-        h1, h2, h3, .heading-font {
-            font-family: 'Outfit', sans-serif;
-        }
-
-        #canvas-container {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100vh;
-            z-index: -1;
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
-        .static-nav {
-            background: rgba(3, 3, 5, 0.8);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            position: fixed;
-            top: 1.5rem; 
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 50;
-            width: 95%;
-            max-width: 64rem; 
-            border-radius: 9999px;
-        }
-
-        .spotlight-card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--card-border);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2); 
-            border-radius: 16px;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-            display: block; 
-        }
-        
-        .spotlight-card:hover {
-            border-color: var(--theme-color, rgba(59, 130, 246, 0.6));
-            box-shadow: 0 0 30px var(--theme-color-glow, rgba(59, 130, 246, 0.2));
-            transform: translateY(-5px);
-        }
-
-        .spotlight-card::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(
-                800px circle at var(--mouse-x) var(--mouse-y),
-                var(--theme-color-glow, rgba(59, 130, 246, 0.15)),
-                transparent 40%
-            );
-            z-index: 1;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            pointer-events: none;
-        }
-
-        .spotlight-card::after {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: radial-gradient(
-                600px circle at var(--mouse-x) var(--mouse-y),
-                var(--theme-color, rgba(59, 130, 246, 0.5)),
-                transparent 40%
-            );
-            z-index: 0;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            pointer-events: none;
-        }
-
-        .spotlight-card:hover::before,
-        .spotlight-card:hover::after {
-            opacity: 1;
-        }
-        
-        .spotlight-content {
-            position: relative;
-            z-index: 2;
-            background-color: var(--bg-dark);
-            border-radius: 15px;
-            margin: 1px;
-            height: calc(100% - 2px);
-        }
-        
-        .spotlight-card.glass .spotlight-content {
-            background-color: rgba(3, 3, 5, 0.85);
-            backdrop-filter: blur(10px);
-        }
-
-        .btn-border-glow {
-            position: relative;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-        .btn-border-glow:hover {
-            border-color: var(--accent-primary);
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-            transform: translateY(-2px);
-        }
-        .btn-contact-ref, .btn-primary {
-            background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%); 
-            color: #ffffff; 
-            padding: 10px 32px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 0.95rem;
-            border: none;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4); 
-        }
-        .btn-border-ref {
-            border: 1px solid #d6d6d6;
-            color: #c3c3c3;         
-            background: transparent;
-            padding: 10px 24px;
-            border-radius: 12px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 0 0 rgba(51, 58, 70, 0); 
-        }
-
-        .text-reveal-mask { overflow: hidden; display: inline-block; vertical-align: bottom; }
-        .text-reveal-line { display: inline-block; transform: translateY(100%); }
-        .hero-title { line-height: 0.9; letter-spacing: -0.04em; }
-
-        .text-gradient-standout {
-            background: linear-gradient(90deg, #60a5fa, #34d399);
-            background-clip: text;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            font-weight: 700;
-        }
-
-        .timeline-container { position: relative; }
-        .timeline-track {
-            position: absolute; left: 20px; top: 0; bottom: 0; width: 2px;
-            background: #3b82f6; /* Blue line as per UI */
-            opacity: 0.5;
-        }
-        .timeline-progress {
-            position: absolute; left: 20px; top: 0; width: 2px; height: 0%;
-            background: linear-gradient(to bottom, #60a5fa, #3b82f6);
-            box-shadow: 0 0 15px #3b82f6;
-        }
-
-        .grain-overlay {
+        /* --- UI ELEMENTS --- */
+        .scanlines {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 9999; opacity: 0.03;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-        }
-
-        ::selection { background: var(--accent-secondary); color: black; }
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--accent-primary); }
-
-        .orbit-container {
-            position: relative;
-            width: 240px;
-            height: 240px;
-        }
-        @media (min-width: 768px) {
-            .orbit-container {
-                width: 320px;
-                height: 320px;
-            }
-        }
-        @media (min-width: 1024px) {
-             .orbit-container {
-                width: 380px; 
-                height: 380px;
-            }
-        }
-
-        .orbiting-dot {
-            position: absolute;
-            width: 16px;
-            height: 16px;
-            background-color: var(--accent-secondary);
-            border-radius: 50%;
-            box-shadow: 0 0 15px var(--accent-secondary);
-            animation: orbit 8s linear infinite;
-            top: 50%;
-            left: 50%;
-            margin-top: -8px;
-            margin-left: -8px;
-            z-index: 0;
-        }
-
-        @keyframes orbit {
-            from { transform: rotate(0deg) translateX(120px) rotate(0deg); }
-            to   { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            background-size: 100% 3px, 3px 100%;
+            pointer-events: none; z-index: 40;
         }
         
-        @media (min-width: 768px) {
-            @keyframes orbit {
-                from { transform: rotate(0deg) translateX(170px) rotate(0deg); }
-                to   { transform: rotate(360deg) translateX(170px) rotate(-360deg); }
-            }
+        #cursor {
+            position: fixed; top: 0; left: 0; width: 24px; height: 24px;
+            border: 2px solid #00ff41; border-radius: 50%;
+            transform: translate(-50%, -50%); pointer-events: none; z-index: 9999;
+            transition: all 0.1s ease-out; mix-blend-mode: difference;
         }
-        @media (min-width: 1024px) {
-            @keyframes orbit {
-                from { transform: rotate(0deg) translateX(210px) rotate(0deg); }
-                to   { transform: rotate(360deg) translateX(210px) rotate(-360deg); }
-            }
+        #cursor-dot {
+            position: fixed; top: 0; left: 0; width: 4px; height: 4px;
+            background: #00ff41; border-radius: 50%;
+            transform: translate(-50%, -50%); pointer-events: none; z-index: 9999;
         }
+        body.hovering #cursor { width: 50px; height: 50px; background: rgba(0, 255, 65, 0.1); border-color: #00f3ff; }
+
+        /* --- BOOT SCREEN --- */
+        #boot-screen {
+            position: fixed; inset: 0; background: #000; z-index: 100;
+            display: flex; align-items: center; justify-content: center;
+            font-family: 'Share Tech Mono', monospace; color: #00ff41;
+        }
+
+        /* --- STORYLINE TIMELINE --- */
+        .story-line {
+            position: absolute; left: 50%; top: 0; bottom: 0; width: 2px;
+            background: linear-gradient(to bottom, transparent, #00ff41, #00f3ff, transparent);
+            transform: translateX(-50%); opacity: 0.3;
+        }
+        @media (max-width: 768px) { .story-line { left: 20px; } }
+
+        /* --- CHAPTER MARKERS --- */
+        .chapter-marker {
+            width: 16px; height: 16px; background: #050505; border: 2px solid #00ff41;
+            border-radius: 50%; position: absolute; left: 50%; transform: translateX(-50%);
+            box-shadow: 0 0 10px #00ff41; z-index: 10;
+        }
+        @media (max-width: 768px) { .chapter-marker { left: 20px; } }
+
+        /* --- MISSION CARDS --- */
+        .mission-card {
+            background: rgba(10, 10, 10, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+            transition: all 0.4s ease;
+            position: relative; overflow: hidden;
+        }
+        .mission-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 2px; height: 100%;
+            background: #00ff41; transform: scaleY(0); transform-origin: top; transition: transform 0.4s;
+        }
+        .mission-card:hover { border-color: #00ff41; transform: translateX(10px); }
+        .mission-card:hover::before { transform: scaleY(1); }
+
+        /* --- HEXAGON PROFILE (ENLARGED) --- */
+        .hex-wrapper {
+            position: relative; width: 320px; height: 320px; margin: 0 auto;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .hex-content {
+            width: 300px; height: 300px;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            background: #000; position: relative; z-index: 2;
+        }
+        .hex-content img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(100%) sepia(20%) hue-rotate(90deg); }
+        .hex-border {
+            position: absolute; inset: 0;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            background: #00ff41; z-index: 1; animation: pulse-hex 2s infinite;
+        }
+        @media (max-width: 768px) {
+            .hex-wrapper { width: 220px; height: 220px; }
+            .hex-content { width: 200px; height: 200px; }
+        }
+        @keyframes pulse-hex { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+        /* --- TYPEWRITER & GLITCH --- */
+        .glitch-text { position: relative; display: inline-block; }
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #050505;
+        }
+        .glitch-text::before { left: 2px; text-shadow: -1px 0 #ff00c1; clip: rect(44px, 450px, 56px, 0); animation: glitch-anim 5s infinite linear alternate-reverse; }
+        .glitch-text::after { left: -2px; text-shadow: -1px 0 #00fff9; clip: rect(44px, 450px, 56px, 0); animation: glitch-anim2 5s infinite linear alternate-reverse; }
+        @keyframes glitch-anim { 0% { clip: rect(14px, 9999px, 12px, 0); } 100% { clip: rect(83px, 9999px, 99px, 0); } }
+        @keyframes glitch-anim2 { 0% { clip: rect(69px, 9999px, 2px, 0); } 100% { clip: rect(3px, 9999px, 86px, 0); } }
+
+        /* Skill Bar */
+        .skill-container {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.3s;
+        }
+        .skill-container:hover { border-color: var(--skill-color); }
+        .skill-bar-bg { width: 100%; height: 4px; background: #333; margin-top: 0.5rem; border-radius: 2px; }
+        .skill-bar-fill { height: 100%; background: var(--skill-color); border-radius: 2px; box-shadow: 0 0 10px var(--skill-color); width: 0%; transition: width 1.5s ease-out; }
+
     </style>
 </head>
-<body class="antialiased">
+<body class="font-body">
 
-    <div class="grain-overlay"></div>
-    <div id="canvas-container"></div>
-    
-    <nav class="static-nav px-6 py-4 flex justify-between items-center glass-card" id="navbar">
-        <a href="#" class="flex items-center gap-3 group">
-            <div class="relative w-8 h-8 flex items-center justify-center overflow-hidden rounded-full bg-white text-black font-bold text-sm tracking-tighter">
-                <span class="group-hover:-translate-y-8 transition-transform duration-300 block">M</span>
-                <span class="absolute top-8 group-hover:top-1.5 text-blue-700 duration-300 block">H</span>
+    <!-- BOOT SEQUENCE -->
+    <div id="boot-screen">
+        <div class="text-center">
+            <div class="text-4xl mb-4 font-header">SYSTEM BOOT</div>
+            <div class="text-sm font-code" id="boot-text">INITIALIZING...</div>
+            <div class="w-64 h-2 bg-gray-900 mt-4 mx-auto overflow-hidden">
+                <div id="boot-bar" class="h-full bg-ops-green w-0"></div>
             </div>
-            <span class="font-bold text-lg tracking-wide hidden sm:block opacity-80 group-hover:opacity-100 transition-opacity">MOHITH</span>
-        </a>
-
-        <div class="hidden md:flex items-center gap-6 text-lg font-semibold tracking-widest uppercase text-gray-400 glass-card">
-            <a href="#projects" class="hover:text-blue-300 transition-colors">Projects</a>
-            <a href="#experience" class="hover:text-blue-300 transition-colors">Experience</a>
-            <a href="#skills" class="hover:text-blue-300 transition-colors">Skills</a>
-            <a href="#certifications" class="hover:text-blue-300 transition-colors">Certifications</a>
-            <a href="Mohith_H_Resume.pdf" download class="btn-border-glow border-blue-400 hover:text-blue-400 transition-colors px-3 py-1 rounded-full  flex items-center gap-3 font-semibold">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                Resume
-            </a>
         </div>
-
-        <div class="flex items-center gap-6 text-lg tracking-widest">
-            <a href="#contact" class="hidden md:flex btn-contact-ref btn-border-glow font-semibold hover:text-black-400 transition-colors px-6 py-2 rounded-full items-center gap-3 font-semibold">
-                CONTACT 
-            </a>
-            
-            <button id="mobile-menu-btn" class="md:hidden text-white focus:outline-none p-2">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-            </button>
-        </div>
-    </nav>
-
-    <div id="mobile-menu" class="fixed inset-0 bg-[#030305]/95 backdrop-blur-xl z-50 flex flex-col items-center justify-center space-y-8 opacity-0 pointer-events-none transition-all duration-300">
-         <button id="mobile-menu-close" class="absolute top-8 right-8 text-white/50 hover:text-white p-4">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-         </button>
-         
-         <a href="#projects" class="text-4xl font-black text-white hover:text-blue-400 mobile-link tracking-tighter">PROJECTS</a>
-         <a href="#experience" class="text-4xl font-black text-white hover:text-blue-400 mobile-link tracking-tighter">EXPERIENCE</a>
-         <a href="#skills" class="text-4xl font-black text-white hover:text-blue-400 mobile-link tracking-tighter">SKILLS</a>
-         <a href="#certifications" class="text-4xl font-black text-white hover:text-blue-400 mobile-link tracking-tighter">CERTIFICATIONS</a>
-         
-         <div class="flex flex-col gap-4 mt-8 w-64 text-center">
-             <a href="Mohith_H_Resume.pdf" download class="btn-border-glow py-4 rounded-xl font-bold text-white mobile-link">CV</a>
-             <a href="#contact" class="bg-blue-600 text-white py-4 rounded-xl font-bold mobile-link">CONTACT</a>
-         </div>
     </div>
 
-    <main class="relative z-10">
+    <!-- UI OVERLAYS -->
+    <div class="scanlines"></div>
+    <div id="cursor"></div>
+    <div id="cursor-dot"></div>
 
-        <section class="min-h-screen flex items-center justify-center pt-32 px-4 md:px-6">
-            <div class="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-                <div class="lg:col-span-8 relative z-10 text-center lg:text-left">
-                    <div class="mb-6 flex items-center justify-center lg:justify-start gap-3 opacity-0 animate-fade-in">
-                        <span class="relative flex h-3 w-3">
-                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                          <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
-                        </span>
-                    </div>
-                    <h1 class="text-4xl md:text-6xl font-extrabold mb-4 leading-tight tracking-tight reveal-text hero-anim">
-                        <div class="text-reveal-mask"><span class="text-reveal-line">Hey, I'm <span class="text-reveal-line text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-white">Mohith H</span></div>
-                </h1>
-                <h2 class="text-2xl md:text-4xl font-bold mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-200 to-white reveal-text hero-anim delay-100">
-                    A Versatile Developer & <span class="text-gradient serif italic">Creative Designer</span>
-                </h2>
-                <h3 class="text-1xl md:text-1xl font-bold mb-6 text-white reveal-text hero-anim delay-100">
-                    I approach development with a strategic, user-centric mindset, turning complex technical challenges into engaging, market-ready solutions.
-                </h3>
-                </div>
+    <!-- BACKGROUND MATRIX (Fixed Canvas) -->
+    <canvas id="matrix-bg" class="fixed top-0 left-0 w-full h-full -z-10 opacity-20"></canvas>
 
-                <div class="lg:col-span-4 relative h-[300px] md:h-[400px] lg:h-[600px] flex items-center justify-center hero-visual">
-                    <div class="orbit-container flex justify-center items-center relative">
-                         <img src="https://media.licdn.com/dms/image/v2/D5603AQEdUMdXr8Mb0w/profile-displayphoto-crop_800_800/B56ZoKq7sJG4AI-/0/1761115621598?e=1769040000&v=beta&t=WM_QFrte7p1OJ8A1tejlEgSjThjabEL7iLYDEijvDqQ" 
-                              alt="Mohithanjan" 
-                              style="border-radius: 50%;"
-                              class="w-full h-full object-cover rounded-full shadow-2xl border-4 border-gray-800 relative z-10 block">
-                         <div class="orbiting-dot z-0"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <!-- NAVIGATION -->
+    <nav class="fixed top-0 w-full z-40 bg-ops-bg/90 backdrop-blur border-b border-white/5 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3">
+            <div class="w-2 h-2 bg-ops-green rounded-full animate-pulse"></div>
+            <span class="font-code text-ops-green tracking-widest text-sm">OP: MOHITH_H</span>
+        </div>
+        <div class="hidden md:flex gap-8 text-xs font-code tracking-[0.2em] text-gray-500">
+            <a href="#prologue" class="hover:text-ops-green transition-colors nav-link">01_PROLOGUE</a>
+            <a href="#operations" class="hover:text-ops-cyan transition-colors nav-link">02_OPERATIONS</a>
+            <a href="#arsenal" class="hover:text-ops-gold transition-colors nav-link">03_ARSENAL</a>
+            <a href="#intel" class="hover:text-ops-crimson transition-colors nav-link">04_INTEL_LOGS</a>
+        </div>
+        <a href="Mohith_H_Resume_.pdf" download class="border border-ops-green text-ops-green px-4 py-1 text-xs font-bold hover:bg-ops-green hover:text-black transition-all font-code nav-link">
+            [ DOWNLOAD_CV ]
+        </a>
+    </nav>
 
-        <section id="projects" class="py-24 md:py-32 px-6">
-            <div class="max-w-7xl mx-auto">
-                <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 md:mb-20 gap-6 text-center md:text-left">
-                    <div>
-                        <h2 class="text-center bg-clip-text text-5xl md:text-7xl font-bold mb-4 tracking-tighter">TOP <span class="text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-white">PROJECTS</span></h2>
-                    </div>
-                    <div class="hidden md:block text-right">
-                        <p class="text-gray-400 max-w-xs text-sm">A curation of high-impact applications focusing on security, utility, and experience.</p>
-                    </div>
-                </div>
+    <main class="relative">
+        <!-- GLOBAL TIMELINE LINE -->
+        <div class="story-line"></div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="cards-container">
-                    
-                    <a href="https://github.com/Mohithanjan23/LeakPeek" target="_blank" class="spotlight-card glass group h-[450px]" style="--theme-color: #a855f7; --theme-color-glow: rgba(168, 85, 247, 0.4);">
-                        <div class="spotlight-content flex flex-col p-6 h-full relative">
-                            <div class="absolute inset-0 z-0">
-                                <img src="https://placehold.co/600x800/111/333?text=LEAKPEEK" class="w-full h-full object-cover opacity-60 group-hover:opacity-40 group-hover:scale-105 transition-all duration-700" alt="LeakPeek">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
-                            </div>
-                            <div class="relative z-10 mt-auto flex flex-col h-full justify-end">
-                                <div>
-                                    <span class="px-2 py-1 bg-purple-500/20 border border-purple-500/30 text-purple-300 text-[10px] font-bold uppercase tracking-widest rounded mb-3 inline-block">Cybersecurity</span>
-                                    <h3 class="text-3xl font-bold mb-2 text-gradient-standout">LEAKPEEK</h3>
-                                    <p class="text-gray-400 text-sm mb-6 line-clamp-2 group-hover:text-gray-200 transition-colors">Dark web data breach detection system using Python, Flutter & Tor integration.</p>
-                                    <span class="inline-flex items-center text-sm font-bold text-white group-hover:text-purple-400 transition-colors">View Project →</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="https://github.com/Mohithanjan23/calplate" target="_blank" class="spotlight-card glass group h-[450px]" style="--theme-color: #22c55e; --theme-color-glow: rgba(34, 197, 94, 0.4);">
-                        <div class="spotlight-content flex flex-col p-6 h-full relative">
-                            <div class="absolute inset-0 z-0">
-                                <img src="https://placehold.co/600x800/111/333?text=CALPLATE" class="w-full h-full object-cover opacity-60 group-hover:opacity-40 group-hover:scale-105 transition-all duration-700" alt="Calplate">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
-                            </div>
-                            <div class="relative z-10 mt-auto flex flex-col h-full justify-end">
-                                <div>
-                                    <span class="px-2 py-1 bg-green-500/20 border border-green-500/30 text-green-300 text-[10px] font-bold uppercase tracking-widest rounded mb-3 inline-block">HealthTech</span>
-                                    <h3 class="text-3xl font-bold mb-2 text-gradient-standout">CALPLATE</h3>
-                                    <p class="text-gray-400 text-sm mb-6 line-clamp-2 group-hover:text-gray-200 transition-colors">Full-stack nutrition tracking with a focus on user-centric design patterns.</p>
-                                    <span class="inline-flex items-center text-sm font-bold text-white group-hover:text-green-400 transition-colors">View Project →</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="hhttps://github.com/Mohithanjan23/JohnnyAI" target="_blank" class="spotlight-card glass group h-[450px]" style="--theme-color: #a222c5; --theme-color-glow: rgba(154, 56, 199, 0.4);">
-                        <div class="spotlight-content flex flex-col p-6 h-full relative">
-                            <div class="absolute inset-0 z-0">
-                                <img src="https://placehold.co/600x800/111/333?text=JOHNNYAI" class="w-full h-full object-cover opacity-60 group-hover:opacity-40 group-hover:scale-105 transition-all duration-700" alt="JohnnyAI">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
-                            </div>
-                            <div class="relative z-10 mt-auto flex flex-col h-full justify-end">
-                                <div>
-                                    <span class="px-2 py-1 bg-purple-500/20 border border-purple-500/30 text-purple-300 text-[10px] font-bold uppercase tracking-widest rounded mb-3 inline-block">MOCK VOICE ASSIST</span>
-                                    <h3 class="text-3xl font-bold mb-2 text-gradient-standout">JOHNNY AI</h3>
-                                    <p class="text-gray-400 text-sm mb-6 line-clamp-2 group-hover:text-gray-200 transition-colors">A personalized AI assistant inspired by Jarvis, designed for intelligent task automation and interaction.</p>
-                                    <span class="inline-flex items-center text-sm font-bold text-white group-hover:text-purple-400 transition-colors">View Project →</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                    
-                    <a href="https://github.com/Mohithanjan23/Smile-Hard" target="_blank" class="spotlight-card glass group h-[450px]" style="--theme-color: #ef4444; --theme-color-glow: rgba(239, 68, 68, 0.4);">
-                        <div class="spotlight-content flex flex-col p-6 h-full relative">
-                            <div class="absolute inset-0 z-0">
-                                <img src="https://placehold.co/600x800/111/333?text=SMILE+HARD" class="w-full h-full object-cover opacity-60 group-hover:opacity-40 group-hover:scale-105 transition-all duration-700" alt="Smile Hard">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
-                            </div>
-                            <div class="relative z-10 mt-auto flex flex-col h-full justify-end">
-                                <div>
-                                    <span class="px-2 py-1 bg-red-500/20 border border-red-500/30 text-red-300 text-[10px] font-bold uppercase tracking-widest rounded mb-3 inline-block">Game Dev</span>
-                                    <h3 class="text-3xl font-bold mb-2 text-gradient-standout">SMILE HARD</h3>
-                                    <p class="text-gray-400 text-sm mb-6 line-clamp-2 group-hover:text-gray-200 transition-colors">Retro-style webcam game controlled by your facial expressions.</p>
-                                    <span class="inline-flex items-center text-sm font-bold text-white group-hover:text-red-400 transition-colors">Play Game →</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="https://github.com/Mohithanjan23/content-wind" target="_blank" class="spotlight-card glass group h-[450px]" style="--theme-color: #3b82f6; --theme-color-glow: rgba(59, 130, 246, 0.4);">
-                        <div class="spotlight-content flex flex-col p-6 h-full relative">
-                            <div class="absolute inset-0 z-0">
-                                <img src="https://placehold.co/600x800/111/333?text=CONTENT-WIND" class="w-full h-full object-cover opacity-60 group-hover:opacity-40 group-hover:scale-105 transition-all duration-700" alt="CinePlan">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
-                            </div>
-                            <div class="relative z-10 mt-auto flex flex-col h-full justify-end">
-                                <div>
-                                    <span class="px-2 py-1 bg-blue-500/20 border border-blue-500/30 text-blue-300 text-[10px] font-bold uppercase tracking-widest rounded mb-3 inline-block">Web AI Tool</span>
-                                    <h3 class="text-3xl font-bold mb-2 text-gradient-standout">CINE PLAN</h3>
-                                    <p class="text-gray-400 text-sm mb-6 line-clamp-2 group-hover:text-gray-200 transition-colors">A smart content generation assistant designed to streamline writing workflows with AI-powered suggestions and automation.</p>
-                                    <span class="inline-flex items-center text-sm font-bold text-white group-hover:text-blue-400 transition-colors">View Project →</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="https://github.com/Mohithanjan23/crackbank-frontend" target="_blank" class="spotlight-card glass group h-[450px]" style="--theme-color: #eab308; --theme-color-glow: rgba(234, 179, 8, 0.4);">
-                        <div class="spotlight-content flex flex-col p-6 h-full relative">
-                            <div class="absolute inset-0 z-0">
-                                <img src="https://placehold.co/600x800/111/333?text=CRACKBANK" class="w-full h-full object-cover opacity-60 group-hover:opacity-40 group-hover:scale-105 transition-all duration-700" alt="Crackbank">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
-                            </div>
-                            <div class="relative z-10 mt-auto flex flex-col h-full justify-end">
-                                <div>
-                                    <span class="px-2 py-1 bg-yellow-500/20 border border-yellow-500/30 text-yellow-300 text-[10px] font-bold uppercase tracking-widest rounded mb-3 inline-block">FinTech</span>
-                                    <h3 class="text-3xl font-bold mb-2 text-gradient-standout">CRACKBANK</h3>
-                                    <p class="text-gray-400 text-sm mb-6 line-clamp-2 group-hover:text-gray-200 transition-colors">Banking simulation platform handling transactions and account management.</p>
-                                    <span class="inline-flex items-center text-sm font-bold text-white group-hover:text-yellow-400 transition-colors">View Project →</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="https://github.com/Mohithanjan23/CinePlan" target="_blank" class="spotlight-card glass group h-[450px]" style="--theme-color: #ff0000; --theme-color-glow: rgba(234, 8, 8, 0.4);">
-                        <div class="spotlight-content flex flex-col p-6 h-full relative">
-                            <div class="absolute inset-0 z-0">
-                                <img src="https://placehold.co/600x800/111/333?text=CINEPLAN" class="w-full h-full object-cover opacity-60 group-hover:opacity-40 group-hover:scale-105 transition-all duration-700" alt="CinePlan">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
-                            </div>
-                            <div class="relative z-10 mt-auto flex flex-col h-full justify-end">
-                                <div>
-                                    <span class="px-2 py-1 bg-red-500/20 border border-red-500/30 text-red-300 text-[10px] font-bold uppercase tracking-widest rounded mb-3 inline-block">Shootplanner</span>
-                                    <h3 class="text-3xl font-bold mb-2 text-gradient-standout">CINE PLAN</h3>
-                                    <p class="text-gray-400 text-sm mb-6 line-clamp-2 group-hover:text-gray-200 transition-colors">Banking simulation platform handling transactions and account management.</p>
-                                    <span class="inline-flex items-center text-sm font-bold text-white group-hover:text-red-500 transition-colors">View Project →</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-
-                    <a href="https://drive.google.com/drive/folders/1XUXWj9XFbsAQZVvcNpJ2u5hmS9wk3u6e" target="_blank" class="spotlight-card glass group h-[450px]" style="--theme-color: #ec4899; --theme-color-glow: rgba(236, 72, 153, 0.4);">
-                        <div class="spotlight-content flex flex-col p-6 h-full relative">
-                            <div class="absolute inset-0 z-0">
-                                <img src="https://placehold.co/600x800/111/333?text=DESIGN" class="w-full h-full object-cover opacity-60 group-hover:opacity-40 group-hover:scale-105 transition-all duration-700" alt="Design">
-                                <div class="absolute inset-0 bg-gradient-to-t from-black via-black/80 to-transparent"></div>
-                            </div>
-                            <div class="relative z-10 mt-auto flex flex-col h-full justify-end">
-                                <div>
-                                    <span class="px-2 py-1 bg-pink-500/20 border border-pink-500/30 text-pink-300 text-[10px] font-bold uppercase tracking-widest rounded mb-3 inline-block">Graphics</span>
-                                    <h3 class="text-3xl font-bold mb-2 text-gradient-standout">DESIGN FILES</h3>
-                                    <p class="text-gray-400 text-sm mb-6 line-clamp-2 group-hover:text-gray-200 transition-colors">A collection of branding, posters, and UI design experiments.</p>
-                                    <span class="inline-flex items-center text-sm font-bold text-white group-hover:text-pink-400 transition-colors">View Drive →</span>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </section>
-
-        <section id="experience" class="py-24 md:py-32 px-6 bg-[#050507]">
-            <div class="max-w-7xl mx-auto">
-                <h2 class="text-4xl md:text-6xl font-bold mb-20 text-center tracking-tighter">PROFESSIONAL <span class="text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-white">PATHWAY</span></h2>
-                
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-16">
-                    
-                    <div>
-                        <h4 class="text-2xl font-bold text-white mb-10 border-b border-gray-800 pb-4">WORK EXPERIENCE</h4>
-                        <div class="timeline-container relative">
-                            <div class="timeline-track"></div>
-                            <div class="timeline-progress" id="progress-line-1"></div>
-                            
-                            <a href="https://craispes.wordpress.com/" target="_blank" class="block relative pl-16 mb-24 timeline-item group">
-                                <div class="absolute left-[13px] top-2 w-4 h-4 rounded-full bg-black border-2 border-green-500 z-10 shadow-[0_0_10px_#22c55e] group-hover:scale-125 transition-transform duration-300"></div>
-                                <div class="flex flex-col mb-2">
-                                    <h3 class="text-2xl font-bold text-gradient-standout group-hover:text-white transition-colors">Summer Intern (AI/ML)</h3>
-                                    <span class="font-mono text-green-400 text-sm mt-1">PES CRAIS • Jun 2025 - Jul 2025</span>
-                                </div>
-                                <p class="text-gray-400 group-hover:text-gray-200 transition-colors">Contributing to cutting-edge AI research and development.</p>
-                            </a>
-
-                            <a href="https://goniyo.com/" target="_blank" class="block relative pl-16 mb-20 timeline-item group">
-                                <div class="absolute left-[13px] top-2 w-4 h-4 rounded-full bg-black border-2 border-orange-500 z-10 group-hover:scale-125 transition-transform duration-300"></div>
-                                <div class="flex flex-col mb-2">
-                                    <h3 class="text-xl font-bold text-gradient-standout group-hover:text-white transition-colors">Campus Ambassador</h3>
-                                    <span class="font-mono text-orange-400 text-sm mt-1">NIYO SOLUTIONS • Feb 2025 - Jul 2025</span>
-                                </div>
-                                <p class="text-gray-400 text-sm group-hover:text-gray-200 transition-colors">Fostered campus community and brand awareness through strategic initiatives.</p>
-                            </a>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 class="text-2xl font-bold text-white mb-10 border-b border-gray-800 pb-4">LEADERSHIP & VOLUNTEERING</h4>
-                        <div class="timeline-container relative">
-                            <div class="timeline-track"></div>
-                            <div class="timeline-progress" id="progress-line-2"></div>
-
-                            <a href="https://www.instagram.com/kalaangana.pesu.ca/" target="_blank" class="block relative pl-16 mb-20 timeline-item group">
-                                <div class="absolute left-[13px] top-2 w-4 h-4 rounded-full bg-black border-2 border-purple-500 z-10 group-hover:scale-125 transition-transform duration-300"></div>
-                                <div class="flex flex-col mb-2">
-                                    <h3 class="text-xl font-bold text-gradient-standout group-hover:text-white transition-colors">Head of Management & Founder</h3>
-                                    <span class="font-mono text-purple-400 text-sm mt-1">KALAANGANA • Oct 2024 - Dec 2025</span>
-                                </div>
-                                <p class="text-gray-400 text-sm group-hover:text-gray-200 transition-colors">Founded organization, led cross-functional teams and executed large-scale events.</p>
-                            </a>
-                            
-                            <a href="https://www.linkedin.com/company/init-pes-ca/" target="_blank" class="block relative pl-16 mb-20 timeline-item group">
-                                <div class="absolute left-[13px] top-2 w-4 h-4 rounded-full bg-black border-2 border-yellow-500 z-10 group-hover:scale-125 transition-transform duration-300"></div>
-                                <div class="flex flex-col mb-2">
-                                    <h3 class="text-xl font-bold text-gradient-standout group-hover:text-white transition-colors">Head of Marketing</h3>
-                                    <span class="font-mono text-yellow-400 text-sm mt-1">INIT.PESU.CA • Feb 2024 - Jun 2025</span>
-                                </div>
-                                <p class="text-gray-400 text-sm group-hover:text-gray-200 transition-colors">Spearheaded marketing strategies resulting in increased engagement.</p>
-                            </a>
-                            
-                            <a href="https://www.linkedin.com/company/pesu-talkies/" target="_blank" class="block relative pl-16 mb-20 timeline-item group">
-                                <div class="absolute left-[13px] top-2 w-4 h-4 rounded-full bg-black border-2 border-purple-500 z-10 group-hover:scale-125 transition-transform duration-300"></div>
-                                <div class="flex flex-col mb-2">
-                                    <h3 class="text-xl font-bold text-gradient-standout group-hover:text-white transition-colors">Director</h3>
-                                    <span class="font-mono text-purple-400 text-sm mt-1">PESU TALKIES • Jan 2024 - May 2025</span>
-                                </div>
-                                <p class="text-gray-400 text-sm group-hover:text-gray-200 transition-colors">Directed club activities and media production workflows.</p>
-                            </a>
-                            
-                            <a href="https://www.linkedin.com/company/irapesu/" target="_blank" class="block relative pl-16 mb-20 timeline-item group">
-                                <div class="absolute left-[13px] top-2 w-4 h-4 rounded-full bg-black border-2 border-green-500 z-10 group-hover:scale-125 transition-transform duration-300"></div>
-                                <div class="flex flex-col mb-2">
-                                    <h3 class="text-xl font-bold text-gradient-standout group-hover:text-white transition-colors">Head of Design</h3>
-                                    <span class="font-mono text-green-400 text-sm mt-1">IRA PESU • Nov 2024 - Jan 2025</span>
-                                </div>
-                                <p class="text-gray-400 text-sm group-hover:text-gray-200 transition-colors">Led visual design direction and branding.</p>
-                            </a>
-                            
-                            <a href="https://www.linkedin.com/company/kannada-koota-pesu/" target="_blank" class="block relative pl-16 mb-20 timeline-item group">
-                                <div class="absolute left-[13px] top-2 w-4 h-4 rounded-full bg-black border-2 border-orange-500 z-10 group-hover:scale-125 transition-transform duration-300"></div>
-                                <div class="flex flex-col mb-2">
-                                    <h3 class="text-xl font-bold text-gradient-standout group-hover:text-white transition-colors">PR & Marketing</h3>
-                                    <span class="font-mono text-orange-400 text-sm mt-1">KANNADA KOOTA • Oct 2023 - Feb 2024</span>
-                                </div>
-                                <p class="text-gray-400 text-sm group-hover:text-gray-200 transition-colors">Managed public relations and cultural event marketing.</p>
-                            </a>
-                            
-                            <a href="https://www.linkedin.com/company/samarpana-india/" target="_blank" class="block relative pl-16 timeline-item group">
-                                <div class="absolute left-[13px] top-2 w-4 h-4 rounded-full bg-black border-2 border-yellow-500 z-10 group-hover:scale-125 transition-transform duration-300"></div>
-                                <div class="flex flex-col mb-2">
-                                    <h3 class="text-xl font-bold text-gradient-standout group-hover:text-white transition-colors">Campaigning</h3>
-                                    <span class="font-mono text-yellow-400 text-sm mt-1">SAMARPANA INDIA • Oct 2023 - Dec 2023</span>
-                                </div>
-                                <p class="text-gray-400 text-sm group-hover:text-gray-200 transition-colors">Executed grassroots campaigning and outreach.</p>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="skills" class="py-24 md:py-32 px-4">
-            <div class="max-w-7xl mx-auto">
-                <h2 class="text-4xl md:text-6xl font-bold mb-20 text-center tracking-tighter">MAJOR <span class="text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-white">SKILLS</span></h2>
-                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-4 gap-4" id="skills-container">
-                    
-                    <div class="spotlight-card h-32 p-4">
-                        <div class="spotlight-content w-full h-full flex flex-col items-center justify-center">
-                            <svg class="w-12 h-12 mb-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                            <span class="font-bold text-xs tracking-widest text-center">DIGITAL MKTG</span>
-                        </div>
-                    </div>
-                    
-                    <div class="spotlight-card h-32 p-4">
-                        <div class="spotlight-content w-full h-full flex flex-col items-center justify-center">
-                            <svg class="w-12 h-12 mb-2 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>
-                            <span class="font-bold text-xs tracking-widest text-center">CONTENT CR.</span>
-                        </div>
-                    </div>
-
-                    <div class="spotlight-card h-32 p-4">
-                        <div class="spotlight-content w-full h-full flex flex-col items-center justify-center">
-                            <svg class="w-12 h-12 mb-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L15.232 5.232z"></path></svg>
-                            <span class="font-bold text-xs tracking-widest text-center">GRAPHIC DES.</span>
-                        </div>
-                    </div>
-
-                    <div class="spotlight-card h-32 p-4">
-                        <div class="spotlight-content w-full h-full flex flex-col items-center justify-center">
-                            <svg class="w-12 h-12 mb-2 text-pink-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01"></path></svg>
-                            <span class="font-bold text-xs tracking-widest text-center">UI/UX</span>
-                        </div>
-                    </div>
-
-                    <div class="spotlight-card h-32 p-4">
-                        <div class="spotlight-content w-full h-full flex flex-col items-center justify-center">
-                            <svg class="w-12 h-12 mb-2 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a5 5 0 0 0 0 10 5 5 0 0 0 0-10"></path><path d="M2 12h20"></path></svg>
-                            <span class="font-bold text-xs tracking-widest text-center">REACT</span>
-                        </div>
-                    </div>
-
-                    <div class="spotlight-card h-32 p-4">
-                        <div class="spotlight-content w-full h-full flex flex-col items-center justify-center">
-                            <svg class="w-12 h-12 mb-2 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                            <span class="font-bold text-xs tracking-widest text-center">FLUTTER</span>
-                        </div>
-                    </div>
-
-                    <div class="spotlight-card h-32 p-4">
-                        <div class="spotlight-content w-full h-full flex flex-col items-center justify-center">
-                            <svg class="w-12 h-12 mb-2 text-green-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.88 14.32l-3.3-3.3 1.41-1.41 1.89 1.89 4.24-4.24 1.41 1.41-5.65 5.65z"></path></svg>
-                            <span class="font-bold text-xs tracking-widest text-center">NODE.JS</span>
-                        </div>
-                    </div>
-
-                    <div class="spotlight-card h-32 p-4">
-                        <div class="spotlight-content w-full h-full flex flex-col items-center justify-center">
-                            <svg class="w-12 h-12 mb-2 text-blue-300" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H8l4-5 1 4h3l-4 5z"></path></svg>
-                            <span class="font-bold text-xs tracking-widest text-center">PYTHON</span>
-                        </div>
-                    </div>
-                    
-                    <div class="spotlight-card h-32 p-4">
-                        <div class="spotlight-content w-full h-full flex flex-col items-center justify-center">
-                            <svg class="w-12 h-12 mb-2 text-orange-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm3.08 13.52c-.3.3-.77.3-1.07 0l-2.5-2.5-2.5 2.5c-.3.3-.77.3-1.07 0s-.3-.77 0-1.07l2.5-2.5-2.5-2.5c-.3-.3-.3-.77 0-1.07s.77-.3 1.07 0l2.5 2.5 2.5-2.5c.3-.3.77-.3 1.07 0s.3.77 0 1.07l-2.5 2.5 2.5 2.5c.3.3.3.77 0 1.07z"></path></svg>
-                            <span class="font-bold text-xs tracking-widest text-center">AWS</span>
-                        </div>
-                    </div>
-
-                    <div class="spotlight-card h-32 p-4">
-                        <div class="spotlight-content w-full h-full flex flex-col items-center justify-center">
-                            <svg class="w-12 h-12 mb-2 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10m16-10v10M4 11h16M4 14h16M10 4v16m4-16v16"></path></svg>
-                            <span class="font-bold text-xs tracking-widest text-center">SQL & DATA</span>
-                        </div>
-                    </div>
-
-                    <div class="spotlight-card h-32 p-4">
-                        <div class="spotlight-content w-full h-full flex flex-col items-center justify-center">
-                            <svg class="w-12 h-12 mb-2 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
-                            <span class="font-bold text-xs tracking-widest text-center">SECURITY</span>
-                        </div>
-                    </div>
-
-                    <div class="spotlight-card h-32 p-4">
-                        <div class="spotlight-content w-full h-full flex flex-col items-center justify-center">
-                            <svg class="w-12 h-12 mb-2 text-gray-400" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"></path></svg>
-                            <span class="font-bold text-xs tracking-widest text-center">GITHUB</span>
-                        </div>
-                    </div>
-
-                    <div class="spotlight-card h-32 p-4">
-                        <div class="spotlight-content w-full h-full flex flex-col items-center justify-center">
-                            <svg class="w-12 h-12 mb-2 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
-                            <span class="font-bold text-xs tracking-widest text-center">THREE.JS</span>
-                        </div>
-                    </div>
-
-                    <div class="spotlight-card h-32 p-4">
-                        <div class="spotlight-content w-full h-full flex flex-col items-center justify-center">
-                            <svg class="w-12 h-12 mb-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.5L15.232 5.232z"></path></svg>
-                            <span class="font-bold text-xs tracking-widest text-center">FIGMA</span>
-                        </div>
-                    </div>
-
-                    <div class="spotlight-card h-32 p-4">
-                        <div class="spotlight-content w-full h-full flex flex-col items-center justify-center">
-                            <svg class="w-12 h-12 mb-2 text-pink-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                            <span class="font-bold text-xs tracking-widest text-center">VIDEO EDITING</span>
-                        </div>
-                    </div>
-
-                    <div class="spotlight-card h-32 p-4">
-                        <div class="spotlight-content w-full h-full flex flex-col items-center justify-center">
-                            <svg class="w-12 h-12 mb-2 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H8l4-5 1 4h3l-4 5z"></path></svg>
-                            <span class="font-bold text-xs tracking-widest text-center">JAVA</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="certifications" class="py-24 md:py-32 px-6 bg-[#030305]">
-            <div class="max-w-7xl mx-auto">
-                <h2 class="text-4xl md:text-6xl font-bold mb-20 text-center tracking-tighter">CERTIFIED <span class="text-center text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-white">ACHIEVED</span></h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6" id="cert-container">
-                    <a href="#" class="spotlight-card h-40 group block" style="--theme-color: #3b82f6;"><div class="spotlight-content p-6 flex flex-col justify-between"><h4 class="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">UX Design Basics</h4><p class="text-[10px] font-bold uppercase tracking-widest text-gray-500">LearnTube.ai</p></div></a>
-                    <a href="https://freecodecamp.org/certification/fcc76af5763-8a43-4965-a068-7873f34dd4e2/responsive-web-design" target="_blank" class="spotlight-card h-40 group block" style="--theme-color: #22c55e;"><div class="spotlight-content p-6 flex flex-col justify-between"><h4 class="text-lg font-bold text-white group-hover:text-green-400 transition-colors">Responsive Web Design</h4><p class="text-[10px] font-bold uppercase tracking-widest text-gray-500">freeCodeCamp</p></div></a>
-                    <a href="https://forage-uploads-prod.s3.amazonaws.com/completion-certificates/pmnMSL4QiQ9JCgE3W/kkE9HyeNcw6rwCRGw_pmnMSL4QiQ9JCgE3W_3JfEjkPn7Nyf48wDu_1734370369308_completion_certificate.pdf" class="spotlight-card h-40 group block" style="--theme-color: #f97316;"><div class="spotlight-content p-6 flex flex-col justify-between"><h4 class="text-lg font-bold text-white group-hover:text-orange-400 transition-colors">AWS Solutions Architect</h4><p class="text-[10px] font-bold uppercase tracking-widest text-gray-500">AWS via Forage</p></div></a>
-                    <a href="https://forage-uploads-prod.s3.amazonaws.com/completion-certificates/ifobHAoMjQs9s6bKS/gmf3ypEXBj2wvfQWC_ifobHAoMjQs9s6bKS_3JfEjkPn7Nyf48wDu_1745859060267_completion_certificate.pdf" class="spotlight-card h-40 group block" style="--theme-color: #3b82f6;"><div class="spotlight-content p-6 flex flex-col justify-between"><h4 class="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">Cybersecurity Analyst</h4><p class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Tata Group</p></div></a>
-                    <a href="https://www.credly.com/earner/earned/badge/c8a96cc5-8803-4767-991f-e78ba157426b" class="spotlight-card h-40 group block" style="--theme-color: #a855f7;"><div class="spotlight-content p-6 flex flex-col justify-between"><h4 class="text-lg font-bold text-white group-hover:text-purple-400 transition-colors">Forward Program</h4><p class="text-[10px] font-bold uppercase tracking-widest text-gray-500">McKinsey.org</p></div></a>
-                    <a href="https://freecodecamp.org/certification/fcc76af5763-8a43-4965-a068-7873f34dd4e2/foundational-c-sharp-with-microsoft" class="spotlight-card h-40 group block" style="--theme-color: #3b82f6;"><div class="spotlight-content p-6 flex flex-col justify-between"><h4 class="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">C# Foundations</h4><p class="text-[10px] font-bold uppercase tracking-widest text-gray-500">freeCodeCamp</p></div></a>
-                    <a href="https://coursera.org/share/28a5c0b98dd46479e38191f7564954e3" class="spotlight-card h-40 group block" style="--theme-color: #eab308;"><div class="spotlight-content p-6 flex flex-col justify-between"><h4 class="text-lg font-bold text-white group-hover:text-yellow-400 transition-colors">Linux & SQL for Data</h4><p class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Coursera</p></div></a>
-                    <a href="https://www.coursera.org/account/accomplishments/verify/TVR0TXR162V7" class="spotlight-card h-40 group block" style="--theme-color: #ef4444;"><div class="spotlight-content p-6 flex flex-col justify-between"><h4 class="text-lg font-bold text-white group-hover:text-red-400 transition-colors">Cybersecurity Foundations</h4><p class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Coursera</p></div></a>
-                    <a href="https://www.coursera.org/account/accomplishments/verify/7IDQMZZI1MW4" class="spotlight-card h-40 group block" style="--theme-color: #3b82f6;"><div class="spotlight-content p-6 flex flex-col justify-between"><h4 class="text-lg font-bold text-white group-hover:text-blue-400 transition-colors">Network & Risk Security</h4><p class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Coursera</p></div></a>
-                    <a href="https://forage-uploads-prod.s3.amazonaws.com/completion-certificates/xhih9yFWsf6AYfngd/HNpZwZcuYwona2d8Y_xhih9yFWsf6AYfngd_3JfEjkPn7Nyf48wDu_1750407870305_completion_certificate.pdf" class="spotlight-card h-40 group block" style="--theme-color: #a855f7;"><div class="spotlight-content p-6 flex flex-col justify-between"><h4 class="text-lg font-bold text-white group-hover:text-purple-400 transition-colors">Software Eng. Sim</h4><p class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Accenture</p></div></a>
-                    <a href="https://forage-uploads-prod.s3.amazonaws.com/completion-certificates/32A6DqtsbF7LbKdcq/NkaC7knWtjSbi6aYv_32A6DqtsbF7LbKdcq_3JfEjkPn7Nyf48wDu_1749622713345_completion_certificate.pdf" class="spotlight-card h-40 group block" style="--theme-color: #22c55e;"><div class="spotlight-content p-6 flex flex-col justify-between"><h4 class="text-lg font-bold text-white group-hover:text-green-400 transition-colors">Data Analytics Sim</h4><p class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Quantium</p></div></a>
-                    <a href="https://www.coursera.org/account/accomplishments/verify/QT6APKF8BT3E?utm_source=link&utm_medium=certificate&utm_content=cert_image&utm_campaign=sharing_cta&utm_product=course" class="spotlight-card h-40 group block" style="--theme-color: #ef4444;"><div class="spotlight-content p-6 flex flex-col justify-between"><h4 class="text-lg font-bold text-white group-hover:text-red-400 transition-colors">Manage Security Risks</h4><p class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Coursera</p></div></a>
-                </div>
-            </div>
-        </section>
-
-        <footer id="contact" class="py-24 md:py-32 px-6 border-t border-white/5 relative overflow-hidden">
-            <div class="absolute inset-0 bg-blue-600/5 blur-[100px] pointer-events-none"></div>
+        <!-- CHAPTER 1: PROLOGUE (HERO) -->
+        <section id="prologue" class="min-h-screen flex items-center justify-center relative py-20">
+            <div class="chapter-marker top-1/2"></div>
             
-            <div class="max-w-4xl mx-auto text-center relative z-10">
-                <h2 class="text-5xl md:text-8xl font-black mb-8 tracking-tighter">LET'S <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-white">CONNECT</span></h2>
-                <a href="mailto:mohithanjan23@gmail.com" class="btn-primary px-8 py-4 rounded-full font-bold inline-block hover-target mb-10 text-lg hover:text-black btn-border-glow">
-                    mohithanjan23@gmail.com
-                </a>
-                
-                <div class="flex justify-center gap-8 mb-16">
-                    <a href="https://www.linkedin.com/in/mohithanjan/" target="_blank" class="btn-border-ref px-4 py-2 rounded-full font-bold inline-block uppercase tracking-widest hover:text-blue-500 transition-colors">LinkedIn</a>
-                    <a href="https://github.com/Mohithanjan23" target="_blank" class="btn-border-ref px-4 py-2 rounded-full rounded-full font-bold uppercase tracking-widest hover:text-green-500 transition-colors">GitHub</a>
-                    <a href="https://www.instagram.com/mohithanjan/" target="_blank" class="btn-border-ref px-4 py-2 rounded-full rounded-full font-bold uppercase tracking-widest hover:text-pink-500 transition-colors">Instagram</a>
+            <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="order-2 lg:order-1">
+                    <div class="font-code text-ops-green text-sm mb-2">> TRANSMISSION_INCOMING</div>
+                    <h1 class="text-6xl md:text-8xl font-header text-white mb-4 glitch-text" data-text="MOHITH H">
+                        MOHITH H
+                    </h1>
+                    <div class="text-2xl font-log text-ops-cyan mb-6">
+                        CLASS: <span id="typewriter"></span><span class="animate-pulse">_</span>
+                    </div>
+                    <p class="text-lg text-gray-400 mb-8 border-l-2 border-ops-green pl-6 max-w-xl">
+                        "The digital realm is chaotic. I bring order." <br><br>
+                        Elite Full-Stack Engineer and Creative Strategist. Specialized in architecting secure systems (React/Python) and executing high-level digital operations. 
+                        My mission is to bridge the gap between complex code and human experience.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#operations" class="bg-ops-green text-black px-6 py-3 font-bold font-code hover:bg-white transition-colors nav-link">
+                            INITIATE_MISSION
+                        </a>
+                    </div>
                 </div>
 
-                <p class="text-gray-600 text-xs uppercase tracking-widest">
-                    &copy; 2025 Mohithanjan. Built with Passion & Code.
+                <div class="order-1 lg:order-2 flex justify-center">
+                    <div class="hex-wrapper">
+                        <div class="hex-border"></div>
+                        <div class="hex-content">
+                            <img src="https://media.licdn.com/dms/image/v2/D5603AQEdUMdXr8Mb0w/profile-displayphoto-scale_400_400/B56ZoKq7sJG4Ag-/0/1761115621794?e=1772064000&v=beta&t=zS2AlCc8IctR8Hr-PHc1ZFrvulrd_Ady8_O9_qcX2dg" alt="Agent Profile">
+                        </div>
+                        <!-- Decorative HUD Elements -->
+                        <div class="absolute -top-10 -right-10 text-[10px] font-code text-ops-cyan text-right">
+                            ID: 593-A<br>LOC: INDIA<br>CLR: LVL_5
+                        </div>
+                        <div class="absolute -bottom-10 -left-10 text-[10px] font-code text-ops-crimson">
+                            STATUS: ACTIVE<br>SYS: ONLINE
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHAPTER 2: OPERATIONS (PROJECTS) -->
+        <section id="operations" class="py-32 relative">
+            <div class="chapter-marker top-32"></div>
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="text-center mb-20">
+                    <h2 class="text-5xl font-header text-white mb-2">ACTIVE OPERATIONS</h2>
+                    <p class="font-code text-ops-cyan">Decrypted Mission Files: 8</p>
+                </div>
+
+                <!-- Mission Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
+                    <!-- Project Cards kept same as requested -->
+                    <a href="https://github.com/Mohithanjan23/LeakPeek" target="_blank" class="mission-card p-8 group nav-link">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="font-header text-2xl text-ops-crimson">OP: LEAKPEEK</div>
+                            <i data-lucide="lock" class="text-ops-crimson"></i>
+                        </div>
+                        <div class="font-log text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
+                            > OBJECTIVE: Dark Web Surveillance<br>
+                            > TECH: Python, Tor, Flutter<br>
+                            > STATUS: <span class="text-ops-crimson animate-pulse">THREAT_DETECTED</span>
+                        </div>
+                        <p class="text-sm text-gray-300">
+                            Deployed a mobile-first interception system to detect data breaches via Tor onion routing. Integrated real-time alerts for immediate threat neutralization.
+                        </p>
+                    </a>
+
+                    <a href="https://github.com/Mohithanjan23/calplate" target="_blank" class="mission-card p-8 group nav-link">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="font-header text-2xl text-ops-green">OP: CALPLATE</div>
+                            <i data-lucide="activity" class="text-ops-green"></i>
+                        </div>
+                        <div class="font-log text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
+                            > OBJECTIVE: Human Performance Opt.<br>
+                            > TECH: MERN Stack, Node.js<br>
+                            > STATUS: OPERATIONAL
+                        </div>
+                        <p class="text-sm text-gray-300">
+                            Engineered an AI-powered bio-metric tracking system. Utilizes caloric analysis algorithms to optimize operator physical readiness and nutrition.
+                        </p>
+                    </a>
+
+                    <a href="https://github.com/Mohithanjan23/JohnnyAI" target="_blank" class="mission-card p-8 group nav-link">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="font-header text-2xl text-ops-cyan">OP: JOHNNY_AI</div>
+                            <i data-lucide="bot" class="text-ops-cyan"></i>
+                        </div>
+                        <div class="font-log text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
+                            > OBJECTIVE: Automation Protocol<br>
+                            > TECH: Python, NLP, Speech Rec<br>
+                            > STATUS: LISTENING...
+                        </div>
+                        <p class="text-sm text-gray-300">
+                            Constructed a voice-activated virtual assistant. Capable of executing OS-level commands and retrieving intelligence hands-free.
+                        </p>
+                    </a>
+
+                    <a href="https://github.com/Mohithanjan23/Smile-Hard" target="_blank" class="mission-card p-8 group nav-link">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="font-header text-2xl text-ops-gold">OP: SMILE_HARD</div>
+                            <i data-lucide="smile" class="text-ops-gold"></i>
+                        </div>
+                        <div class="font-log text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
+                            > OBJECTIVE: Facial Interface Testing<br>
+                            > TECH: OpenCV, PyGame<br>
+                            > STATUS: LIVE
+                        </div>
+                        <p class="text-sm text-gray-300">
+                            Developed a real-time facial recognition interface gamified for reflex training. Uses advanced computer vision to map expressions to inputs.
+                        </p>
+                    </a>
+
+                    <a href="https://github.com/Mohithanjan23/content-wind" target="_blank" class="mission-card p-8 group nav-link">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="font-header text-2xl text-ops-purple">OP: CNT_WIND</div>
+                            <i data-lucide="wind" class="text-ops-purple"></i>
+                        </div>
+                        <div class="font-log text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
+                            > OBJECTIVE: AI Marketing Psy-Ops<br>
+                            > TECH: React, OpenAI API<br>
+                            > STATUS: GENERATING
+                        </div>
+                        <p class="text-sm text-gray-300">
+                            AI-driven content generation tool. Analyzes trends and creates targeted messaging for digital platforms to maximize engagement.
+                        </p>
+                    </a>
+
+                    <a href="https://github.com/Mohithanjan23/crackbank-frontend" target="_blank" class="mission-card p-8 group nav-link">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="font-header text-2xl text-blue-500">OP: CRACKBANK</div>
+                            <i data-lucide="landmark" class="text-blue-500"></i>
+                        </div>
+                        <div class="font-log text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
+                            > OBJECTIVE: Financial Sim<br>
+                            > TECH: JS, SQL, Auth<br>
+                            > STATUS: SECURE
+                        </div>
+                        <p class="text-sm text-gray-300">
+                            Secure banking infrastructure simulation. Handles encrypted transactions and account management protocols.
+                        </p>
+                    </a>
+
+                    <a href="https://github.com/Mohithanjan23/CinePlan" target="_blank" class="mission-card p-8 group nav-link">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="font-header text-2xl text-ops-pink">OP: CINEPLAN</div>
+                            <i data-lucide="video" class="text-ops-pink"></i>
+                        </div>
+                        <div class="font-log text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
+                            > OBJECTIVE: Logistics Coordination<br>
+                            > TECH: React, Gemini AI, Maps<br>
+                            > STATUS: DEPLOYED
+                        </div>
+                        <p class="text-sm text-gray-300">
+                            Production logistics suite. Integrates weather telemetry and AI shot generation to coordinate field operations for creators.
+                        </p>
+                    </a>
+
+                     <a href="https://drive.google.com/drive/folders/1XUXWj9XFbsAQZVvcNpJ2u5hmS9wk3u6e" target="_blank" class="mission-card p-8 group nav-link">
+                        <div class="flex justify-between items-start mb-6">
+                            <div class="font-header text-2xl text-orange-500">OP: VISUALS</div>
+                            <i data-lucide="pen-tool" class="text-orange-500"></i>
+                        </div>
+                        <div class="font-log text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
+                            > OBJECTIVE: Visual Propaganda<br>
+                            > TECH: Figma, Adobe Suite<br>
+                            > STATUS: ARCHIVED
+                        </div>
+                        <p class="text-sm text-gray-300">
+                            Collection of UI/UX designs and branding assets used in various campaigns and digital fronts.
+                        </p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHAPTER 3: ARSENAL (SKILLS) -->
+        <section id="arsenal" class="py-32 relative bg-ops-panel/50">
+            <div class="chapter-marker top-32"></div>
+            <div class="container mx-auto px-6 relative z-10">
+                <div class="text-center mb-16">
+                    <h2 class="text-4xl font-header text-white mb-2">OPERATOR LOADOUT</h2>
+                    <p class="font-code text-gray-500">SKILL_CLASSIFICATION_MATRIX</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                    
+                    <!-- COLUMN 1: DEVELOPMENT & ENGINEERING -->
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-header text-ops-cyan mb-6 border-b border-ops-cyan/30 pb-2 flex items-center gap-2">
+                            <i data-lucide="code-2" class="w-5 h-5"></i> DEV_&_ENGINEERING
+                        </h3>
+                        
+                        <div class="skill-container" style="--skill-color: #ef4444;">
+                            <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">JAVA</span><span class="text-red-500">90%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%"></div></div>
+                        </div>
+                        
+                        <div class="skill-container" style="--skill-color: #3b82f6;">
+                            <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">PYTHON</span><span class="text-blue-500">95%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 95%"></div></div>
+                        </div>
+
+                        <div class="skill-container" style="--skill-color: #fbbf24;">
+                            <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">JAVASCRIPT</span><span class="text-yellow-400">92%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 92%"></div></div>
+                        </div>
+
+                         <div class="skill-container" style="--skill-color: #22c55e;">
+                            <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">NODE.JS</span><span class="text-green-500">88%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 88%"></div></div>
+                        </div>
+
+                        <div class="skill-container" style="--skill-color: #06b6d4;">
+                            <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">REACT</span><span class="text-cyan-500">85%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%"></div></div>
+                        </div>
+
+                        <div class="skill-container" style="--skill-color: #60a5fa;">
+                            <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">FLUTTER</span><span class="text-blue-400">80%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 80%"></div></div>
+                        </div>
+
+                         <div class="skill-container" style="--skill-color: #2dd4bf;">
+                            <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">SQL</span><span class="text-teal-400">85%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%"></div></div>
+                        </div>
+
+                         <div class="skill-container" style="--skill-color: #f97316;">
+                            <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">AWS</span><span class="text-orange-500">75%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 75%"></div></div>
+                        </div>
+                         
+                         <div class="skill-container" style="--skill-color: #eab308;">
+                            <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">CYBERSECURITY</span><span class="text-yellow-500">85%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%"></div></div>
+                        </div>
+                    </div>
+
+                    <!-- COLUMN 2: DESIGN & CREATIVE -->
+                     <div class="space-y-4">
+                        <h3 class="text-xl font-header text-ops-pink mb-6 border-b border-ops-pink/30 pb-2 flex items-center gap-2">
+                            <i data-lucide="palette" class="w-5 h-5"></i> DESIGN_&_CREATIVE
+                        </h3>
+                        
+                        <div class="skill-container" style="--skill-color: #f472b6;">
+                            <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">UI/UX DESIGN</span><span class="text-pink-400">90%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%"></div></div>
+                        </div>
+
+                        <div class="skill-container" style="--skill-color: #a855f7;">
+                            <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">FIGMA</span><span class="text-purple-500">95%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 95%"></div></div>
+                        </div>
+
+                        <div class="skill-container" style="--skill-color: #c084fc;">
+                            <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">GRAPHIC DESIGN</span><span class="text-purple-400">90%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%"></div></div>
+                        </div>
+
+                         <div class="skill-container" style="--skill-color: #ffffff;">
+                            <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">THREE.JS</span><span class="text-gray-200">70%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 70%"></div></div>
+                        </div>
+
+                        <div class="skill-container" style="--skill-color: #ec4899;">
+                            <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">VIDEO EDITING</span><span class="text-pink-500">85%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%"></div></div>
+                        </div>
+                     </div>
+
+                    <!-- COLUMN 3: TOOLS & MANAGEMENT -->
+                     <div class="space-y-4">
+                        <h3 class="text-xl font-header text-ops-green mb-6 border-b border-ops-green/30 pb-2 flex items-center gap-2">
+                            <i data-lucide="wrench" class="w-5 h-5"></i> TOOLS_&_MGMT
+                        </h3>
+                        
+                        <div class="skill-container" style="--skill-color: #9ca3af;">
+                            <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">GITHUB</span><span class="text-gray-400">90%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%"></div></div>
+                        </div>
+
+                         <div class="skill-container" style="--skill-color: #4ade80;">
+                            <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">DIGITAL MARKETING</span><span class="text-green-400">85%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%"></div></div>
+                        </div>
+
+                        <div class="skill-container" style="--skill-color: #818cf8;">
+                            <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">CONTENT CREATION</span><span class="text-indigo-400">95%</span></div>
+                            <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 95%"></div></div>
+                        </div>
+                     </div>
+
+                </div>
+
+                <!-- CERTIFICATIONS SECTION ADDED BELOW SKILLS -->
+                 <div class="mt-24">
+                    <div class="text-center mb-12">
+                         <h3 class="text-3xl font-header text-white mb-2">TRAINING_MODULES</h3>
+                         <p class="font-code text-gray-500">CERTIFICATION_DATABASE</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                         <!-- Cert 1 -->
+                        <div class="border border-white/10 p-4 bg-white/5 hover:border-ops-green transition-colors group">
+                            <i data-lucide="award" class="text-ops-green mb-2 w-6 h-6"></i>
+                            <div class="font-bold text-white text-sm">UX DESIGN BASICS</div>
+                            <div class="text-xs font-code text-gray-500">LEARNTUBE.AI</div>
+                        </div>
+                        <!-- Cert 2 -->
+                        <div class="border border-white/10 p-4 bg-white/5 hover:border-ops-cyan transition-colors group">
+                            <i data-lucide="layout" class="text-ops-cyan mb-2 w-6 h-6"></i>
+                            <div class="font-bold text-white text-sm">RESPONSIVE WEB DESIGN</div>
+                            <div class="text-xs font-code text-gray-500">FREECODECAMP</div>
+                        </div>
+                         <!-- Cert 3 -->
+                        <div class="border border-white/10 p-4 bg-white/5 hover:border-ops-gold transition-colors group">
+                            <i data-lucide="cloud" class="text-ops-gold mb-2 w-6 h-6"></i>
+                            <div class="font-bold text-white text-sm">AWS SOL. ARCHITECT</div>
+                            <div class="text-xs font-code text-gray-500">FORAGE</div>
+                        </div>
+                         <!-- Cert 4 -->
+                        <div class="border border-white/10 p-4 bg-white/5 hover:border-ops-crimson transition-colors group">
+                            <i data-lucide="shield-check" class="text-ops-crimson mb-2 w-6 h-6"></i>
+                            <div class="font-bold text-white text-sm">CYBERSECURITY ANALYST</div>
+                            <div class="text-xs font-code text-gray-500">TATA GROUP</div>
+                        </div>
+                         <!-- Cert 5 -->
+                        <div class="border border-white/10 p-4 bg-white/5 hover:border-blue-400 transition-colors group">
+                            <i data-lucide="bar-chart-2" class="text-blue-400 mb-2 w-6 h-6"></i>
+                            <div class="font-bold text-white text-sm">DATA ANALYTICS VIRTUAL</div>
+                            <div class="text-xs font-code text-gray-500">FORAGE</div>
+                        </div>
+                         <!-- Cert 6 -->
+                        <div class="border border-white/10 p-4 bg-white/5 hover:border-purple-500 transition-colors group">
+                            <i data-lucide="code" class="text-purple-500 mb-2 w-6 h-6"></i>
+                            <div class="font-bold text-white text-sm">C# FOUNDATIONS</div>
+                            <div class="text-xs font-code text-gray-500">MICROSOFT</div>
+                        </div>
+                         <!-- Cert 7 -->
+                        <div class="border border-white/10 p-4 bg-white/5 hover:border-yellow-500 transition-colors group">
+                            <i data-lucide="database" class="text-yellow-500 mb-2 w-6 h-6"></i>
+                            <div class="font-bold text-white text-sm">LINUX & SQL</div>
+                            <div class="text-xs font-code text-gray-500">COURSERA</div>
+                        </div>
+                         <!-- Cert 8 -->
+                        <div class="border border-white/10 p-4 bg-white/5 hover:border-red-500 transition-colors group">
+                            <i data-lucide="lock" class="text-red-500 mb-2 w-6 h-6"></i>
+                            <div class="font-bold text-white text-sm">FOUNDATIONS OF CYBERSEC</div>
+                            <div class="text-xs font-code text-gray-500">COURSERA</div>
+                        </div>
+                         <!-- Cert 9 -->
+                        <div class="border border-white/10 p-4 bg-white/5 hover:border-indigo-400 transition-colors group">
+                            <i data-lucide="shield" class="text-indigo-400 mb-2 w-6 h-6"></i>
+                            <div class="font-bold text-white text-sm">NETWORK & RISK SECURITY</div>
+                            <div class="text-xs font-code text-gray-500">COURSERA</div>
+                        </div>
+                         <!-- Cert 10 -->
+                        <div class="border border-white/10 p-4 bg-white/5 hover:border-teal-400 transition-colors group">
+                            <i data-lucide="terminal-square" class="text-teal-400 mb-2 w-6 h-6"></i>
+                            <div class="font-bold text-white text-sm">SOFTWARE ENG. JOB SIM</div>
+                            <div class="text-xs font-code text-gray-500">ACCENTURE</div>
+                        </div>
+                         <!-- Cert 11 -->
+                        <div class="border border-white/10 p-4 bg-white/5 hover:border-orange-400 transition-colors group">
+                            <i data-lucide="pie-chart" class="text-orange-400 mb-2 w-6 h-6"></i>
+                            <div class="font-bold text-white text-sm">DATA ANALYTICS JOB SIM</div>
+                            <div class="text-xs font-code text-gray-500">QUANTIUM</div>
+                        </div>
+                         <!-- Cert 12 -->
+                        <div class="border border-white/10 p-4 bg-white/5 hover:border-rose-500 transition-colors group">
+                            <i data-lucide="alert-triangle" class="text-rose-500 mb-2 w-6 h-6"></i>
+                            <div class="font-bold text-white text-sm">MANAGE SECURITY RISKS</div>
+                            <div class="text-xs font-code text-gray-500">COURSERA</div>
+                        </div>
+                    </div>
+                 </div>
+            </div>
+        </section>
+
+        <!-- CHAPTER 4: INTEL LOGS (EXPERIENCE) -->
+        <section id="intel" class="py-32 relative">
+            <div class="chapter-marker top-32"></div>
+            <div class="container mx-auto px-6 relative z-10 max-w-6xl">
+                 <div class="text-center mb-16">
+                    <h2 class="text-4xl font-header text-white">FIELD_REPORTS</h2>
+                    <p class="font-code text-gray-500">Chronological Intel Gathering</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    
+                    <!-- LEFT COLUMN: WORK HISTORY -->
+                    <div>
+                         <h3 class="text-2xl font-header text-white mb-8 border-b border-gray-800 pb-2">WORK_HISTORY</h3>
+                         <div class="space-y-8 border-l-2 border-white/10 pl-8 ml-2">
+                             
+                             <!-- Work 1 -->
+                             <div class="relative group">
+                                <div class="absolute -left-[2.35rem] top-0 w-4 h-4 bg-ops-cyan rounded-full border-2 border-black group-hover:scale-125 transition-transform"></div>
+                                <div class="bg-ops-panel p-6 border border-white/5 hover:border-ops-cyan transition-colors">
+                                    <div class="flex flex-col justify-between mb-2">
+                                        <h4 class="text-xl font-header text-ops-cyan">JAIN LAUNCHPAD <span class="text-sm font-body text-white block md:inline">// SDE INTERN</span></h4>
+                                        <span class="font-code text-xs text-gray-500">JAN 2026 - PRESENT</span>
+                                    </div>
+                                    <p class="font-log text-gray-400">
+                                        > Developing scalable applications.<br>
+                                        > Coordinating with product management to translate roadmap requirements into functional solutions.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Work 2 -->
+                            <div class="relative group">
+                                <div class="absolute -left-[2.35rem] top-0 w-4 h-4 bg-ops-green rounded-full border-2 border-black group-hover:scale-125 transition-transform"></div>
+                                <div class="bg-ops-panel p-6 border border-white/5 hover:border-ops-green transition-colors">
+                                    <div class="flex flex-col justify-between mb-2">
+                                        <h4 class="text-xl font-header text-ops-green">PES CRAIS <span class="text-sm font-body text-white block md:inline">// SUMMER INTERN</span></h4>
+                                        <span class="font-code text-xs text-gray-500">JUN 2025 - JUL 2025</span>
+                                    </div>
+                                    <p class="font-log text-gray-400">
+                                        > Upgraded frontend control panel using React.<br>
+                                        > Implemented backend logic in Python & containerised stack with Docker.<br>
+                                        > Assembled robot hardware and end-effectors.
+                                    </p>
+                                </div>
+                            </div>
+                         </div>
+                    </div>
+
+                    <!-- RIGHT COLUMN: LEADERSHIP & VOLUNTEERING -->
+                     <div>
+                         <h3 class="text-2xl font-header text-white mb-8 border-b border-gray-800 pb-2">LEADERSHIP_&_VOLUNTEERING</h3>
+                         <div class="space-y-8 border-l-2 border-white/10 pl-8 ml-2">
+
+                            <!-- Lead 1 -->
+                            <div class="relative group">
+                                <div class="absolute -left-[2.35rem] top-0 w-4 h-4 bg-ops-gold rounded-full border-2 border-black group-hover:scale-125 transition-transform"></div>
+                                <div class="bg-ops-panel p-6 border border-white/5 hover:border-ops-gold transition-colors">
+                                    <div class="flex flex-col justify-between mb-2">
+                                        <h4 class="text-xl font-header text-ops-gold">NIYO SOLUTIONS <span class="text-sm font-body text-white block md:inline">// AMBASSADOR</span></h4>
+                                        <span class="font-code text-xs text-gray-500">FEB 2025 - JUL 2025</span>
+                                    </div>
+                                    <p class="font-log text-gray-400">
+                                        > Promoted study abroad solutions via inbound marketing.<br>
+                                        > Boosted brand visibility through social media campaigns.
+                                    </p>
+                                </div>
+                            </div>
+
+                            <!-- Lead 2 -->
+                            <div class="relative group">
+                                <div class="absolute -left-[2.35rem] top-0 w-4 h-4 bg-purple-500 rounded-full border-2 border-black group-hover:scale-125 transition-transform"></div>
+                                <div class="bg-ops-panel p-6 border border-white/5 hover:border-purple-500 transition-colors">
+                                    <div class="flex flex-col justify-between mb-2">
+                                        <h4 class="text-xl font-header text-purple-500">KALAANGANA <span class="text-sm font-body text-white block md:inline">// FOUNDER</span></h4>
+                                        <span class="font-code text-xs text-gray-500">OCT 2025 - DEC 2025</span>
+                                    </div>
+                                    <p class="font-log text-gray-400">
+                                        > Directed club operations and student-led cultural initiatives.<br>
+                                        > Built cross-functional teams for university-wide events.
+                                    </p>
+                                </div>
+                            </div>
+
+                             <!-- Lead 3 -->
+                            <div class="relative group">
+                                <div class="absolute -left-[2.35rem] top-0 w-4 h-4 bg-blue-500 rounded-full border-2 border-black group-hover:scale-125 transition-transform"></div>
+                                <div class="bg-ops-panel p-6 border border-white/5 hover:border-blue-500 transition-colors">
+                                    <div class="flex flex-col justify-between mb-2">
+                                        <h4 class="text-xl font-header text-blue-500">INIT.PESU.CA <span class="text-sm font-body text-white block md:inline">// HEAD_MKT</span></h4>
+                                        <span class="font-code text-xs text-gray-500">FEB 2024 - JUN 2025</span>
+                                    </div>
+                                    <p class="font-log text-gray-400">
+                                        > Spearheaded marketing and content creation for tech club.<br>
+                                        > Boosted engagement through targeted campaigns and podcasts.
+                                    </p>
+                                </div>
+                            </div>
+
+                             <!-- Lead 4 -->
+                            <div class="relative group">
+                                <div class="absolute -left-[2.35rem] top-0 w-4 h-4 bg-gray-500 rounded-full border-2 border-black group-hover:scale-125 transition-transform"></div>
+                                <div class="bg-ops-panel p-6 border border-white/5 hover:border-gray-500 transition-colors">
+                                    <div class="flex flex-col justify-between mb-2">
+                                        <h4 class="text-xl font-header text-gray-400">PESU TALKIES <span class="text-sm font-body text-white block md:inline">// DIRECTOR</span></h4>
+                                        <span class="font-code text-xs text-gray-500">JAN 2024 - MAY 2025</span>
+                                    </div>
+                                    <p class="font-log text-gray-400">
+                                        > Led production and direction of creative reels.<br>
+                                        > Oversaw university film promotions and branding.
+                                    </p>
+                                </div>
+                            </div>
+
+                             <!-- Lead 5 -->
+                            <div class="relative group">
+                                <div class="absolute -left-[2.35rem] top-0 w-4 h-4 bg-pink-500 rounded-full border-2 border-black group-hover:scale-125 transition-transform"></div>
+                                <div class="bg-ops-panel p-6 border border-white/5 hover:border-pink-500 transition-colors">
+                                    <div class="flex flex-col justify-between mb-2">
+                                        <h4 class="text-xl font-header text-pink-500">IRA PESU <span class="text-sm font-body text-white block md:inline">// HEAD_DESIGN</span></h4>
+                                        <span class="font-code text-xs text-gray-500">NOV 2024 - JAN 2025</span>
+                                    </div>
+                                    <p class="font-log text-gray-400">
+                                        > Enhanced brand presence through creative design.<br>
+                                        > Led workshops on UI/UX and team alignment.
+                                    </p>
+                                </div>
+                            </div>
+
+                         </div>
+                     </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER: END GAME -->
+        <footer class="py-16 bg-black border-t border-ops-green/20 relative overflow-hidden">
+            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-full max-w-lg h-px bg-gradient-to-r from-transparent via-ops-green to-transparent"></div>
+            
+            <div class="text-center relative z-10">
+                <h2 class="text-4xl font-header text-white mb-8">MISSION_COMPLETE</h2>
+                
+                <div class="flex justify-center gap-8 mb-10">
+                    <a href="mailto:mohithanjan23@gmail.com" class="text-ops-green font-code hover:text-white transition-colors">[ EMAIL ]</a>
+                    <a href="https://linkedin.com/in/mohithanjan" class="text-ops-cyan font-code hover:text-white transition-colors">[ LINKEDIN ]</a>
+                    <a href="https://github.com/Mohithanjan23" class="text-ops-crimson font-code hover:text-white transition-colors">[ GITHUB ]</a>
+                </div>
+                
+                <p class="text-gray-600 font-code text-xs">
+                    SYSTEM_ID: MOHITH_H // TERMINAL_SESSION_CLOSED
                 </p>
             </div>
         </footer>
@@ -753,128 +748,177 @@
     </main>
 
     <script>
-        const initSpotlight = () => {
-            const containers = document.querySelectorAll('#cards-container, #skills-container, #cert-container');
-            containers.forEach(container => {
-                container.addEventListener('mousemove', (e) => {
-                    const cards = container.querySelectorAll('.spotlight-card');
-                    cards.forEach(card => {
-                        const rect = card.getBoundingClientRect();
-                        const x = e.clientX - rect.left;
-                        const y = e.clientY - rect.top;
-                        card.style.setProperty('--mouse-x', `${x}px`);
-                        card.style.setProperty('--mouse-y', `${y}px`);
-                    });
-                });
-            });
-        };
+        // --- BOOT SEQUENCE ---
+        window.addEventListener('load', () => {
+            const bootScreen = document.getElementById('boot-screen');
+            const bootBar = document.getElementById('boot-bar');
+            const bootText = document.getElementById('boot-text');
+            
+            let width = 0;
+            const interval = setInterval(() => {
+                if (width >= 100) {
+                    clearInterval(interval);
+                    bootText.innerText = "ACCESS GRANTED";
+                    setTimeout(() => {
+                        gsap.to(bootScreen, { opacity: 0, duration: 1, onComplete: () => bootScreen.style.display = 'none' });
+                    }, 500);
+                } else {
+                    width += Math.random() * 10; // Random speed
+                    if(width > 100) width = 100;
+                    if(bootBar) bootBar.style.width = width + '%';
+                }
+            }, 100);
+        });
 
-        const initThreeJS = () => {
-            const container = document.getElementById('canvas-container');
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            camera.position.z = 50;
+        // --- ICONS ---
+        if (window.lucide) {
+            lucide.createIcons();
+        }
 
-            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-            container.appendChild(renderer.domElement);
+        // --- CUSTOM CURSOR ---
+        const cursor = document.getElementById('cursor');
+        const cursorDot = document.getElementById('cursor-dot');
+        
+        document.addEventListener('mousemove', (e) => {
+            if(cursor) {
+                cursor.style.left = e.clientX + 'px';
+                cursor.style.top = e.clientY + 'px';
+            }
+            if(cursorDot) {
+                cursorDot.style.left = e.clientX + 'px';
+                cursorDot.style.top = e.clientY + 'px';
+            }
+        });
 
-            const particleCount = 100;
-            const geometry = new THREE.BufferGeometry();
-            const positions = new Float32Array(particleCount * 3);
-            const velocities = [];
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
+            link.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+        });
 
-            for(let i = 0; i < particleCount * 3; i+=3) {
-                positions[i] = (Math.random() - 0.5) * 100;
-                positions[i+1] = (Math.random() - 0.5) * 100;
-                positions[i+2] = (Math.random() - 0.5) * 50;
-                velocities.push({
-                    x: (Math.random() - 0.5) * 0.05,
-                    y: (Math.random() - 0.5) * 0.05,
-                    z: (Math.random() - 0.5) * 0.05
+        // --- MATRIX RAIN ---
+        const canvas = document.getElementById('matrix-bg');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            let width, height;
+            
+            function resize() {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            }
+            window.addEventListener('resize', resize);
+            resize();
+
+            const cols = Math.floor(width / 20);
+            const ypos = Array(cols).fill(0);
+
+            function matrix() {
+                ctx.fillStyle = '#0001';
+                ctx.fillRect(0, 0, width, height);
+                ctx.fillStyle = '#0f0';
+                ctx.font = '15pt monospace';
+                
+                ypos.forEach((y, ind) => {
+                    const text = String.fromCharCode(Math.random() * 128);
+                    const x = ind * 20;
+                    ctx.fillText(text, x, y);
+                    if (y > 100 + Math.random() * 10000) ypos[ind] = 0;
+                    else ypos[ind] = y + 20;
                 });
             }
+            setInterval(matrix, 50);
+        }
 
-            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-            const material = new THREE.PointsMaterial({ size: 0.3, color: 0x3b82f6, transparent: true, opacity: 0.8 });
-            const particles = new THREE.Points(geometry, material);
-            scene.add(particles);
+        // --- TYPEWRITER ---
+        const roles = ["FULL_STACK_DEV", "CYBER_ANALYST", "BRAND_STRATEGIST"];
+        let rIdx = 0;
+        let cIdx = 0;
+        let isDeleting = false;
+        const typeEl = document.getElementById('typewriter');
 
-            let mouseX = 0, mouseY = 0, targetX = 0, targetY = 0;
-            document.addEventListener('mousemove', (e) => {
-                targetX = (e.clientX - window.innerWidth / 2) * 0.1;
-                targetY = (e.clientY - window.innerHeight / 2) * 0.1;
-            });
-
-            const animate = () => {
-                requestAnimationFrame(animate);
-                mouseX += (targetX - mouseX) * 0.05;
-                mouseY += (targetY - mouseY) * 0.05;
-                particles.rotation.x = mouseY * 0.001;
-                particles.rotation.y = mouseX * 0.001;
-
-                const positions = particles.geometry.attributes.position.array;
-                for(let i = 0; i < particleCount; i++) {
-                    const idx = i * 3;
-                    positions[idx] += velocities[i].x;
-                    positions[idx+1] += velocities[i].y;
-                    positions[idx+2] += velocities[i].z;
-                    if(Math.abs(positions[idx]) > 50) positions[idx] *= -1;
-                    if(Math.abs(positions[idx+1]) > 50) positions[idx+1] *= -1;
-                    if(Math.abs(positions[idx+2]) > 25) positions[idx+2] *= -1;
-                }
-                particles.geometry.attributes.position.needsUpdate = true;
-                renderer.render(scene, camera);
-            };
-            animate();
-
-            window.addEventListener('resize', () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            });
-        };
-
-        const initGSAP = () => {
-            gsap.registerPlugin(ScrollTrigger);
-            gsap.to('.text-reveal-line', { y: 0, duration: 1.2, stagger: 0.1, ease: "power4.out", delay: 0.2 });
-            gsap.to('#progress-line-1', { height: '100%', ease: "none", scrollTrigger: { trigger: '#progress-line-1', start: "top center", end: "bottom center", scrub: true }});
-            gsap.to('#progress-line-2', { height: '100%', ease: "none", scrollTrigger: { trigger: '#progress-line-2', start: "top center", end: "bottom center", scrub: true }});
-            gsap.from('.hero-visual', { scale: 0.5, opacity: 0, duration: 1.5, ease: "elastic.out(1, 0.75)", delay: 0.8 });
+        function typeLoop() {
+            if (!typeEl) return;
+            const currentRole = roles[rIdx];
             
-            gsap.utils.toArray('.spotlight-card').forEach((card, i) => {
-                gsap.from(card, { y: 50, opacity: 0, duration: 0.8, scrollTrigger: { trigger: card, start: "top 90%" }});
+            if (isDeleting) {
+                typeEl.innerText = currentRole.substring(0, cIdx - 1);
+                cIdx--;
+            } else {
+                typeEl.innerText = currentRole.substring(0, cIdx + 1);
+                cIdx++;
+            }
+
+            let speed = isDeleting ? 50 : 100;
+
+            if (!isDeleting && cIdx === currentRole.length) {
+                speed = 2000;
+                isDeleting = true;
+            } else if (isDeleting && cIdx === 0) {
+                isDeleting = false;
+                rIdx = (rIdx + 1) % roles.length;
+                speed = 500;
+            }
+            // Fix variable scope issue from previous logic
+            if(!isDeleting && cIdx === currentRole.length) {
+                 isDeleting = true;
+                 speed = 2000;
+            } else if (isDeleting && cIdx === 0) {
+                isDeleting = false;
+                rIdx = (rIdx + 1) % roles.length;
+                speed = 500;
+            }
+            
+            setTimeout(typeLoop, speed);
+        }
+        typeLoop();
+
+        // --- SCROLL ANIMATIONS ---
+        if (window.gsap && window.ScrollTrigger) {
+            gsap.registerPlugin(ScrollTrigger);
+
+            // Animate Markers
+            gsap.utils.toArray('.chapter-marker').forEach(marker => {
+                gsap.from(marker, {
+                    scale: 0,
+                    opacity: 0,
+                    scrollTrigger: {
+                        trigger: marker,
+                        start: "top 80%",
+                        toggleActions: "play none none reverse"
+                    }
+                });
             });
-            gsap.utils.toArray('.timeline-item').forEach((item, i) => {
-                gsap.from(item, { opacity: 0, x: -20, duration: 0.6, scrollTrigger: { trigger: item, start: "top 85%" }});
+
+            // Animate Cards
+            gsap.utils.toArray('.mission-card').forEach((card, i) => {
+                gsap.from(card, {
+                    y: 50,
+                    opacity: 0,
+                    duration: 0.6,
+                    delay: i * 0.1,
+                    scrollTrigger: {
+                        trigger: card,
+                        start: "top 90%"
+                    }
+                });
             });
-        };
 
-        const initMobileMenu = () => {
-            const btn = document.getElementById('mobile-menu-btn');
-            const menu = document.getElementById('mobile-menu');
-            const closeBtn = document.getElementById('mobile-menu-close');
-            const links = document.querySelectorAll('.mobile-link');
-
-            const toggleMenu = (show) => {
-                menu.style.pointerEvents = show ? "auto" : "none";
-                menu.style.opacity = show ? "1" : "0";
-                document.body.style.overflow = show ? "hidden" : "auto";
-            };
-
-            btn.addEventListener('click', () => toggleMenu(true));
-            closeBtn.addEventListener('click', () => toggleMenu(false));
-            links.forEach(l => l.addEventListener('click', () => toggleMenu(false)));
-        };
-
-        window.addEventListener('DOMContentLoaded', () => {
-            initSpotlight();
-            initThreeJS();
-            initGSAP();
-            initMobileMenu();
-        });
+            // Animate Skill Bars
+             gsap.utils.toArray('.skill-container').forEach((skill) => {
+                const fill = skill.querySelector('.skill-bar-fill');
+                const width = fill.style.width;
+                fill.style.width = '0%'; 
+                
+                gsap.to(fill, {
+                    width: width,
+                    duration: 1.5,
+                    ease: "power2.out",
+                    scrollTrigger: {
+                        trigger: skill,
+                        start: "top 95%"
+                    }
+                });
+            });
+        }
     </script>
 </body>
 </html>
-
