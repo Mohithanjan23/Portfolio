@@ -79,6 +79,12 @@
         }
         body.hovering #cursor { width: 50px; height: 50px; background: rgba(0, 255, 65, 0.1); border-color: #00f3ff; }
 
+        /* Mobile specific adjustments */
+        @media (max-width: 768px) {
+            #cursor, #cursor-dot { display: none; } /* Hide custom cursor on touch devices */
+            body { cursor: auto; }
+        }
+
         /* --- BOOT SCREEN --- */
         #boot-screen {
             position: fixed; inset: 0; background: #000; z-index: 100;
@@ -134,8 +140,8 @@
             background: #00ff41; z-index: 1; animation: pulse-hex 2s infinite;
         }
         @media (max-width: 768px) {
-            .hex-wrapper { width: 220px; height: 220px; }
-            .hex-content { width: 200px; height: 200px; }
+            .hex-wrapper { width: 240px; height: 240px; }
+            .hex-content { width: 220px; height: 220px; }
         }
         @keyframes pulse-hex { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 
@@ -164,6 +170,16 @@
         .skill-bar-bg { width: 100%; height: 4px; background: #333; margin-top: 0.5rem; border-radius: 2px; }
         .skill-bar-fill { height: 100%; background: var(--skill-color); border-radius: 2px; box-shadow: 0 0 10px var(--skill-color); width: 0%; transition: width 1.5s ease-out; }
 
+        /* Mobile Menu */
+        #mobile-menu {
+            position: fixed; inset: 0; background: rgba(5, 5, 5, 0.98); 
+            z-index: 45; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; 
+            gap: 2rem; transform: translateX(100%); transition: transform 0.3s ease-in-out;
+            backdrop-filter: blur(10px);
+        }
+        #mobile-menu.active { transform: translateX(0); }
+
     </style>
 </head>
 <body class="font-body">
@@ -188,21 +204,41 @@
     <canvas id="matrix-bg" class="fixed top-0 left-0 w-full h-full -z-10 opacity-20"></canvas>
 
     <!-- NAVIGATION -->
-    <nav class="fixed top-0 w-full z-40 bg-ops-bg/90 backdrop-blur border-b border-white/5 px-6 py-4 flex justify-between items-center">
-        <div class="flex items-center gap-3">
+    <nav class="fixed top-0 w-full z-50 bg-ops-bg/90 backdrop-blur border-b border-white/5 px-6 py-4 flex justify-between items-center">
+        <div class="flex items-center gap-3 relative z-50">
             <div class="w-2 h-2 bg-ops-green rounded-full animate-pulse"></div>
             <span class="font-code text-ops-green tracking-widest text-sm">OP: MOHITH_H</span>
         </div>
+        
+        <!-- Desktop Menu -->
         <div class="hidden md:flex gap-8 text-xs font-code tracking-[0.2em] text-gray-500">
             <a href="#prologue" class="hover:text-ops-green transition-colors nav-link">01_PROLOGUE</a>
             <a href="#operations" class="hover:text-ops-cyan transition-colors nav-link">02_OPERATIONS</a>
             <a href="#arsenal" class="hover:text-ops-gold transition-colors nav-link">03_ARSENAL</a>
             <a href="#intel" class="hover:text-ops-crimson transition-colors nav-link">04_INTEL_LOGS</a>
         </div>
-        <a href="Mohith_H_Resume_.pdf" download class="border border-ops-green text-ops-green px-4 py-1 text-xs font-bold hover:bg-ops-green hover:text-black transition-all font-code nav-link">
+        <div class="hidden md:block">
+            <a href="Mohith_H_Resume_.pdf" download class="border border-ops-green text-ops-green px-4 py-1 text-xs font-bold hover:bg-ops-green hover:text-black transition-all font-code nav-link">
+                [ DOWNLOAD_CV ]
+            </a>
+        </div>
+
+        <!-- Mobile Menu Button -->
+        <button id="menu-btn" class="md:hidden relative z-50 text-ops-green focus:outline-none">
+            <i data-lucide="menu" class="w-8 h-8"></i>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu">
+        <a href="#prologue" class="text-2xl font-header text-white hover:text-ops-green mobile-link">01 // PROLOGUE</a>
+        <a href="#operations" class="text-2xl font-header text-white hover:text-ops-cyan mobile-link">02 // OPERATIONS</a>
+        <a href="#arsenal" class="text-2xl font-header text-white hover:text-ops-gold mobile-link">03 // ARSENAL</a>
+        <a href="#intel" class="text-2xl font-header text-white hover:text-ops-crimson mobile-link">04 // INTEL_LOGS</a>
+        <a href="Mohith_H_Resume_.pdf" download class="mt-8 border border-ops-green text-ops-green px-8 py-3 text-lg font-bold hover:bg-ops-green hover:text-black transition-all font-code mobile-link">
             [ DOWNLOAD_CV ]
         </a>
-    </nav>
+    </div>
 
     <main class="relative">
         <!-- GLOBAL TIMELINE LINE -->
@@ -213,20 +249,20 @@
             <div class="chapter-marker top-1/2"></div>
             
             <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="order-2 lg:order-1">
+                <div class="order-2 lg:order-1 text-center lg:text-left">
                     <div class="font-code text-ops-green text-sm mb-2">> TRANSMISSION_INCOMING</div>
-                    <h1 class="text-6xl md:text-8xl font-header text-white mb-4 glitch-text" data-text="MOHITH H">
+                    <h1 class="text-5xl md:text-8xl font-header text-white mb-4 glitch-text" data-text="MOHITH H">
                         MOHITH H
                     </h1>
-                    <div class="text-2xl font-log text-ops-cyan mb-6">
+                    <div class="text-xl md:text-2xl font-log text-ops-cyan mb-6">
                         CLASS: <span id="typewriter"></span><span class="animate-pulse">_</span>
                     </div>
-                    <p class="text-lg text-gray-400 mb-8 border-l-2 border-ops-green pl-6 max-w-xl">
+                    <p class="text-base md:text-lg text-gray-400 mb-8 lg:border-l-2 border-ops-green lg:pl-6 max-w-xl mx-auto lg:mx-0">
                         "The digital realm is chaotic. I bring order." <br><br>
                         Elite Full-Stack Engineer and Creative Strategist. Specialized in architecting secure systems (React/Python) and executing high-level digital operations. 
                         My mission is to bridge the gap between complex code and human experience.
                     </p>
-                    <div class="flex gap-4">
+                    <div class="flex justify-center lg:justify-start gap-4">
                         <a href="#operations" class="bg-ops-green text-black px-6 py-3 font-bold font-code hover:bg-white transition-colors nav-link">
                             INITIATE_MISSION
                         </a>
@@ -239,11 +275,11 @@
                         <div class="hex-content">
                             <img src="https://media.licdn.com/dms/image/v2/D5603AQEdUMdXr8Mb0w/profile-displayphoto-scale_400_400/B56ZoKq7sJG4Ag-/0/1761115621794?e=1772064000&v=beta&t=zS2AlCc8IctR8Hr-PHc1ZFrvulrd_Ady8_O9_qcX2dg" alt="Agent Profile">
                         </div>
-                        <!-- Decorative HUD Elements -->
-                        <div class="absolute -top-10 -right-10 text-[10px] font-code text-ops-cyan text-right">
+                        <!-- Decorative HUD Elements (Hidden on tiny screens) -->
+                        <div class="hidden sm:block absolute -top-10 -right-10 text-[10px] font-code text-ops-cyan text-right">
                             ID: 593-A<br>LOC: INDIA<br>CLR: LVL_10
                         </div>
-                        <div class="absolute -bottom-10 -left-10 text-[10px] font-code text-ops-crimson">
+                        <div class="hidden sm:block absolute -bottom-10 -left-10 text-[10px] font-code text-ops-crimson">
                             STATUS: ACTIVE<br>SYS: ONLINE
                         </div>
                     </div>
@@ -252,23 +288,23 @@
         </section>
 
         <!-- CHAPTER 2: OPERATIONS (PROJECTS) -->
-        <section id="operations" class="py-32 relative">
-            <div class="chapter-marker top-32"></div>
+        <section id="operations" class="py-24 relative">
+            <div class="chapter-marker top-24"></div>
             <div class="container mx-auto px-6 relative z-10">
-                <div class="text-center mb-20">
-                    <h2 class="text-4xl font-header text-white mb-2">PROJECT_OPERATIONS</h2>
-                    <p class="font-code text-ops-cyan">Decrypted PROJECT Files: 8</p>
+                <div class="text-center mb-16">
+                    <h2 class="text-2xl md:text-3xl font-header text-white mb-2">ACTIVE OPERATIONS</h2>
+                    <p class="font-code text-ops-cyan text-sm md:text-base">Decrypted PROJECT Files: 8</p>
                 </div>
 
                 <!-- Mission Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
                     <!-- Project Cards kept same as requested -->
-                    <a href="https://github.com/Mohithanjan23/LeakPeek" target="_blank" class="mission-card p-8 group nav-link">
+                    <a href="https://github.com/Mohithanjan23/LeakPeek" target="_blank" class="mission-card p-6 md:p-8 group nav-link">
                         <div class="flex justify-between items-start mb-6">
-                            <div class="font-header text-2xl text-ops-crimson">OP: LEAKPEEK</div>
+                            <div class="font-header text-xl md:text-2xl text-ops-crimson">OP: LEAKPEEK</div>
                             <i data-lucide="lock" class="text-ops-crimson"></i>
                         </div>
-                        <div class="font-log text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
+                        <div class="font-log text-xs md:text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
                             > OBJECTIVE: Dark Web Surveillance<br>
                             > TECH: Python, Tor, Flutter<br>
                             > STATUS: <span class="text-ops-crimson animate-pulse">THREAT_DETECTED</span>
@@ -278,12 +314,12 @@
                         </p>
                     </a>
 
-                    <a href="https://github.com/Mohithanjan23/calplate" target="_blank" class="mission-card p-8 group nav-link">
+                    <a href="https://github.com/Mohithanjan23/calplate" target="_blank" class="mission-card p-6 md:p-8 group nav-link">
                         <div class="flex justify-between items-start mb-6">
-                            <div class="font-header text-2xl text-ops-green">OP: CALPLATE</div>
+                            <div class="font-header text-xl md:text-2xl text-ops-green">OP: CALPLATE</div>
                             <i data-lucide="activity" class="text-ops-green"></i>
                         </div>
-                        <div class="font-log text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
+                        <div class="font-log text-xs md:text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
                             > OBJECTIVE: Human Performance Opt.<br>
                             > TECH: MERN Stack, Node.js<br>
                             > STATUS: OPERATIONAL
@@ -293,12 +329,12 @@
                         </p>
                     </a>
 
-                    <a href="https://github.com/Mohithanjan23/JohnnyAI" target="_blank" class="mission-card p-8 group nav-link">
+                    <a href="https://github.com/Mohithanjan23/JohnnyAI" target="_blank" class="mission-card p-6 md:p-8 group nav-link">
                         <div class="flex justify-between items-start mb-6">
-                            <div class="font-header text-2xl text-ops-cyan">OP: JOHNNY_AI</div>
+                            <div class="font-header text-xl md:text-2xl text-ops-cyan">OP: JOHNNY_AI</div>
                             <i data-lucide="bot" class="text-ops-cyan"></i>
                         </div>
-                        <div class="font-log text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
+                        <div class="font-log text-xs md:text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
                             > OBJECTIVE: Automation Protocol<br>
                             > TECH: Python, NLP, Speech Rec<br>
                             > STATUS: LISTENING...
@@ -308,12 +344,12 @@
                         </p>
                     </a>
 
-                    <a href="https://github.com/Mohithanjan23/Smile-Hard" target="_blank" class="mission-card p-8 group nav-link">
+                    <a href="https://github.com/Mohithanjan23/Smile-Hard" target="_blank" class="mission-card p-6 md:p-8 group nav-link">
                         <div class="flex justify-between items-start mb-6">
-                            <div class="font-header text-2xl text-ops-gold">OP: SMILE_HARD</div>
+                            <div class="font-header text-xl md:text-2xl text-ops-gold">OP: SMILE_HARD</div>
                             <i data-lucide="smile" class="text-ops-gold"></i>
                         </div>
-                        <div class="font-log text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
+                        <div class="font-log text-xs md:text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
                             > OBJECTIVE: Facial Interface Testing<br>
                             > TECH: OpenCV, PyGame<br>
                             > STATUS: LIVE
@@ -323,12 +359,12 @@
                         </p>
                     </a>
 
-                    <a href="https://github.com/Mohithanjan23/content-wind" target="_blank" class="mission-card p-8 group nav-link">
+                    <a href="https://github.com/Mohithanjan23/content-wind" target="_blank" class="mission-card p-6 md:p-8 group nav-link">
                         <div class="flex justify-between items-start mb-6">
-                            <div class="font-header text-2xl text-ops-purple">OP: CNT_WIND</div>
+                            <div class="font-header text-xl md:text-2xl text-ops-purple">OP: CNT_WIND</div>
                             <i data-lucide="wind" class="text-ops-purple"></i>
                         </div>
-                        <div class="font-log text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
+                        <div class="font-log text-xs md:text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
                             > OBJECTIVE: AI Marketing Psy-Ops<br>
                             > TECH: React, OpenAI API<br>
                             > STATUS: GENERATING
@@ -338,12 +374,12 @@
                         </p>
                     </a>
 
-                    <a href="https://github.com/Mohithanjan23/crackbank-frontend" target="_blank" class="mission-card p-8 group nav-link">
+                    <a href="https://github.com/Mohithanjan23/crackbank-frontend" target="_blank" class="mission-card p-6 md:p-8 group nav-link">
                         <div class="flex justify-between items-start mb-6">
-                            <div class="font-header text-2xl text-blue-500">OP: CRACKBANK</div>
+                            <div class="font-header text-xl md:text-2xl text-blue-500">OP: CRACKBANK</div>
                             <i data-lucide="landmark" class="text-blue-500"></i>
                         </div>
-                        <div class="font-log text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
+                        <div class="font-log text-xs md:text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
                             > OBJECTIVE: Financial Sim<br>
                             > TECH: JS, SQL, Auth<br>
                             > STATUS: SECURE
@@ -353,12 +389,12 @@
                         </p>
                     </a>
 
-                    <a href="https://github.com/Mohithanjan23/CinePlan" target="_blank" class="mission-card p-8 group nav-link">
+                    <a href="https://github.com/Mohithanjan23/CinePlan" target="_blank" class="mission-card p-6 md:p-8 group nav-link">
                         <div class="flex justify-between items-start mb-6">
-                            <div class="font-header text-2xl text-ops-pink">OP: CINEPLAN</div>
+                            <div class="font-header text-xl md:text-2xl text-ops-pink">OP: CINEPLAN</div>
                             <i data-lucide="video" class="text-ops-pink"></i>
                         </div>
-                        <div class="font-log text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
+                        <div class="font-log text-xs md:text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
                             > OBJECTIVE: Logistics Coordination<br>
                             > TECH: React, Gemini AI, Maps<br>
                             > STATUS: DEPLOYED
@@ -368,12 +404,12 @@
                         </p>
                     </a>
 
-                     <a href="https://drive.google.com/drive/folders/1XUXWj9XFbsAQZVvcNpJ2u5hmS9wk3u6e" target="_blank" class="mission-card p-8 group nav-link">
+                     <a href="https://drive.google.com/drive/folders/1XUXWj9XFbsAQZVvcNpJ2u5hmS9wk3u6e" target="_blank" class="mission-card p-6 md:p-8 group nav-link">
                         <div class="flex justify-between items-start mb-6">
-                            <div class="font-header text-2xl text-orange-500">OP: VISUALS</div>
+                            <div class="font-header text-xl md:text-2xl text-orange-500">OP: VISUALS</div>
                             <i data-lucide="pen-tool" class="text-orange-500"></i>
                         </div>
-                        <div class="font-log text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
+                        <div class="font-log text-xs md:text-sm text-gray-400 mb-4 bg-black/50 p-3 border border-white/5">
                             > OBJECTIVE: Visual Propaganda<br>
                             > TECH: Figma, Adobe Suite<br>
                             > STATUS: ARCHIVED
@@ -387,12 +423,12 @@
         </section>
 
         <!-- CHAPTER 3: ARSENAL (SKILLS) -->
-        <section id="arsenal" class="py-32 relative bg-ops-panel/50">
-            <div class="chapter-marker top-32"></div>
+        <section id="arsenal" class="py-24 relative bg-ops-panel/50">
+            <div class="chapter-marker top-24"></div>
             <div class="container mx-auto px-6 relative z-10">
                 <div class="text-center mb-16">
-                    <h2 class="text-4xl font-header text-white mb-2">SKILL_LOADOUT</h2>
-                    <p class="font-code text-gray-500">SKILL_CLASSIFICATION_MATRIX</p>
+                    <h2 class="text-2xl md:text-3xl font-header text-white mb-2">SKILL_LOADOUT</h2>
+                    <p class="font-code text-gray-500 text-sm md:text-base">SKILL_CLASSIFICATION_MATRIX</p>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
@@ -505,14 +541,14 @@
 
                 </div>
 
-                <!-- CERTIFICATIONS SECTION ADDED BELOW SKILLS -->
+                <!-- CERTIFICATIONS SECTION -->
                  <div class="mt-24">
                     <div class="text-center mb-12">
-                         <h3 class="text-3xl font-header text-white mb-2">CERTIFIED_MODULES</h3>
-                         <p class="font-code text-gray-500">CERTIFICATION_DATABASE</p>
+                         <h3 class="text-2xl md:text-3xl font-header text-white mb-2">CERTIFIED_MODULES</h3>
+                         <p class="font-code text-gray-500 text-sm">CERTIFICATION_DATABASE</p>
                     </div>
                     
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                          <!-- Cert 1 -->
                         <div class="border border-white/10 p-4 bg-white/5 hover:border-ops-green transition-colors group">
                             <i data-lucide="award" class="text-ops-green mb-2 w-6 h-6"></i>
@@ -591,20 +627,20 @@
         </section>
 
         <!-- CHAPTER 4: INTEL LOGS (EXPERIENCE) -->
-        <section id="intel" class="py-32 relative">
-            <div class="chapter-marker top-32"></div>
+        <section id="intel" class="py-24 relative">
+            <div class="chapter-marker top-24"></div>
             <div class="container mx-auto px-6 relative z-10 max-w-6xl">
                  <div class="text-center mb-16">
-                    <h2 class="text-4xl font-header text-white">EXPERIENCE_REPORTS</h2>
-                    <p class="font-code text-gray-500">Chronological Intel Gathering</p>
+                    <h2 class="text-4xl font-header text-white">FIELD_REPORTS</h2>
+                    <p class="font-code text-gray-500 text-sm md:text-base">Chronological Intel Gathering</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                     
                     <!-- LEFT COLUMN: WORK HISTORY -->
                     <div>
-                         <h3 class="text-2xl font-header text-white mb-8 border-b border-gray-800 pb-2">WORK_EXPERIENCE</h3>
-                         <div class="space-y-8 border-l-2 border-white/10 pl-8 ml-2">
+                         <h3 class="text-2xl font-header text-white mb-8 border-b border-gray-800 pb-2">WORK_HISTORY</h3>
+                         <div class="space-y-8 border-l-2 border-white/10 pl-6 md:pl-8 ml-2">
                              
                              <!-- Work 1 -->
                              <div class="relative group">
@@ -614,7 +650,7 @@
                                         <h4 class="text-xl font-header text-ops-cyan">JAIN LAUNCHPAD <span class="text-sm font-body text-white block md:inline">// SDE INTERN</span></h4>
                                         <span class="font-code text-xs text-gray-500">JAN 2026 - PRESENT</span>
                                     </div>
-                                    <p class="font-log text-gray-400">
+                                    <p class="font-log text-sm text-gray-400">
                                         > Developing scalable applications.<br>
                                         > Coordinating with product management to translate roadmap requirements into functional solutions.
                                     </p>
@@ -629,7 +665,7 @@
                                         <h4 class="text-xl font-header text-ops-green">PES CRAIS <span class="text-sm font-body text-white block md:inline">// SUMMER INTERN</span></h4>
                                         <span class="font-code text-xs text-gray-500">JUN 2025 - JUL 2025</span>
                                     </div>
-                                    <p class="font-log text-gray-400">
+                                    <p class="font-log text-sm text-gray-400">
                                         > Upgraded frontend control panel using React.<br>
                                         > Implemented backend logic in Python & containerised stack with Docker.<br>
                                         > Assembled robot hardware and end-effectors.
@@ -641,8 +677,8 @@
 
                     <!-- RIGHT COLUMN: LEADERSHIP & VOLUNTEERING -->
                      <div>
-                         <h3 class="text-2xl font-header text-white mb-8 border-b border-gray-800 pb-2">LEADERSHIP_&_VOLUNTEERING</h3>
-                         <div class="space-y-8 border-l-2 border-white/10 pl-8 ml-2">
+                         <h3 class="text-2xl font-header text-white mb-8 border-b border-gray-800 pb-2">LEADERSHIP</h3>
+                         <div class="space-y-8 border-l-2 border-white/10 pl-6 md:pl-8 ml-2">
 
                             <!-- Lead 1 -->
                             <div class="relative group">
@@ -652,7 +688,7 @@
                                         <h4 class="text-xl font-header text-blue-500">NIYO SOLUTIONS <span class="text-sm font-body text-white block md:inline">// AMBASSADOR</span></h4>
                                         <span class="font-code text-xs text-gray-500">FEB 2025 - JUL 2025</span>
                                     </div>
-                                    <p class="font-log text-gray-400">
+                                    <p class="font-log text-sm text-gray-400">
                                         > Promoted study abroad solutions via inbound marketing.<br>
                                         > Boosted brand visibility through social media campaigns.
                                     </p>
@@ -667,7 +703,7 @@
                                         <h4 class="text-xl font-header text-purple-500">KALAANGANA <span class="text-sm font-body text-white block md:inline">// FOUNDER; HEAD_MGT</span></h4>
                                         <span class="font-code text-xs text-gray-500">OCT 2025 - DEC 2025</span>
                                     </div>
-                                    <p class="font-log text-gray-400">
+                                    <p class="font-log text-sm text-gray-400">
                                         > Directed club operations and student-led cultural initiatives.<br>
                                         > Built cross-functional teams for university-wide events.
                                     </p>
@@ -682,7 +718,7 @@
                                         <h4 class="text-xl font-header text-ops-gold">INIT.PESU.CA <span class="text-sm font-body text-white block md:inline">// FOUNDER; HEAD_MKT</span></h4>
                                         <span class="font-code text-xs text-gray-500">FEB 2024 - JUN 2025</span>
                                     </div>
-                                    <p class="font-log text-gray-400">
+                                    <p class="font-log text-sm text-gray-400">
                                         > Spearheaded marketing and content creation for tech club.<br>
                                         > Boosted engagement through targeted campaigns and podcasts.
                                     </p>
@@ -694,10 +730,10 @@
                                 <div class="absolute -left-[2.35rem] top-0 w-4 h-4 bg-yellow-400 rounded-full border-2 border-black group-hover:scale-125 transition-transform"></div>
                                 <div class="bg-ops-panel p-6 border border-white/5 hover:border-yellow-400 transition-colors">
                                     <div class="flex flex-col justify-between mb-2">
-                                        <h4 class="text-xl font-header text-yellow-400">PESU TALKIES <span class="text-sm font-body text-white block md:inline">// DIRECTOR; DEPUTY CLUB HEAD</span></h4>
+                                        <h4 class="text-xl font-header text-yellow-400">PESU TALKIES <span class="text-sm font-body text-white block md:inline">// DIRECTOR; DEPUTY HEAD</span></h4>
                                         <span class="font-code text-xs text-gray-500">JAN 2024 - MAY 2025</span>
                                     </div>
-                                    <p class="font-log text-gray-400">
+                                    <p class="font-log text-sm text-gray-400">
                                         > Led production and direction of creative reels.<br>
                                         > Oversaw university film promotions and branding.
                                     </p>
@@ -706,13 +742,13 @@
 
                              <!-- Lead 5 -->
                             <div class="relative group">
-                                <div class="absolute -left-[2.35rem] top-0 w-4 h-4 bg-pink-500 rounded-full border-2 border-black group-hover:scale-125 transition-transform"></div>
-                                <div class="bg-ops-panel p-6 border border-white/5 hover:border-pink-500 transition-colors">
+                                <div class="absolute -left-[2.35rem] top-0 w-4 h-4 bg-cyan-500 rounded-full border-2 border-black group-hover:scale-125 transition-transform"></div>
+                                <div class="bg-ops-panel p-6 border border-white/5 hover:border-cyan-500 transition-colors">
                                     <div class="flex flex-col justify-between mb-2">
-                                        <h4 class="text-xl font-header text-pink-500">IRA PESU <span class="text-sm font-body text-white block md:inline">// HEAD_DESIGN</span></h4>
+                                        <h4 class="text-xl font-header text-cyan-500">IRA PESU <span class="text-sm font-body text-white block md:inline">// HEAD_DESIGN</span></h4>
                                         <span class="font-code text-xs text-gray-500">NOV 2024 - JAN 2025</span>
                                     </div>
-                                    <p class="font-log text-gray-400">
+                                    <p class="font-log text-sm text-gray-400">
                                         > Enhanced brand presence through creative design.<br>
                                         > Led workshops on UI/UX and team alignment.
                                     </p>
@@ -730,10 +766,10 @@
         <footer class="py-16 bg-black border-t border-ops-green/20 relative overflow-hidden">
             <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-full max-w-lg h-px bg-gradient-to-r from-transparent via-ops-green to-transparent"></div>
             
-            <div class="text-center relative z-10">
-                <h2 class="text-4xl font-header text-white mb-8">PLAYER_CONNECTION</h2>
+            <div class="text-center relative z-10 px-6">
+                <h2 class="text-2xl md:text-3xl font-header text-white mb-2">PLAYER_CONNECTION</h2>
                 
-                <div class="flex justify-center gap-8 mb-10">
+                <div class="flex flex-wrap justify-center gap-4 md:gap-8 mb-10">
                     <a href="mailto:mohithanjan23@gmail.com" class="text-ops-green font-code hover:text-white transition-colors">[ EMAIL ]</a>
                     <a href="https://linkedin.com/in/mohithanjan" class="text-ops-cyan font-code hover:text-white transition-colors">[ LINKEDIN ]</a>
                     <a href="https://github.com/Mohithanjan23" class="text-ops-crimson font-code hover:text-white transition-colors">[ GITHUB ]</a>
@@ -775,16 +811,43 @@
             lucide.createIcons();
         }
 
+        // --- MOBILE MENU LOGIC ---
+        const menuBtn = document.getElementById('menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+        let isMenuOpen = false;
+
+        menuBtn.addEventListener('click', () => {
+            isMenuOpen = !isMenuOpen;
+            if (isMenuOpen) {
+                mobileMenu.classList.add('active');
+                menuBtn.innerHTML = '<i data-lucide="x" class="w-8 h-8"></i>';
+            } else {
+                mobileMenu.classList.remove('active');
+                menuBtn.innerHTML = '<i data-lucide="menu" class="w-8 h-8"></i>';
+            }
+            lucide.createIcons();
+        });
+
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                isMenuOpen = false;
+                mobileMenu.classList.remove('active');
+                menuBtn.innerHTML = '<i data-lucide="menu" class="w-8 h-8"></i>';
+                lucide.createIcons();
+            });
+        });
+
         // --- CUSTOM CURSOR ---
         const cursor = document.getElementById('cursor');
         const cursorDot = document.getElementById('cursor-dot');
         
         document.addEventListener('mousemove', (e) => {
-            if(cursor) {
+            if(cursor && window.innerWidth > 768) {
                 cursor.style.left = e.clientX + 'px';
                 cursor.style.top = e.clientY + 'px';
             }
-            if(cursorDot) {
+            if(cursorDot && window.innerWidth > 768) {
                 cursorDot.style.left = e.clientX + 'px';
                 cursorDot.style.top = e.clientY + 'px';
             }
@@ -829,7 +892,7 @@
         }
 
         // --- TYPEWRITER ---
-        const roles = ["FULL_STACK_DEV", "CYBER_ANALYST", "BRAND_STRATEGIST", "GRAPHIC_DESIGNER", "CONTENT_CREATOR", "MARKETING_SPECIALIST"];
+        const roles = ["FULL_STACK_DEV", "CYBER_ANALYST", "STRATEGIST"];
         let rIdx = 0;
         let cIdx = 0;
         let isDeleting = false;
@@ -922,4 +985,3 @@
     </script>
 </body>
 </html>
-
