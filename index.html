@@ -30,7 +30,6 @@
                             bg: '#050505',
                             panel: '#0a0a0a',
                             green: '#00ff41',
-                            greenDim: 'rgba(0, 255, 65, 0.1)',
                             cyan: '#00f3ff',
                             gold: '#ffd700',
                             crimson: '#dc2626',
@@ -54,7 +53,7 @@
         body {
             background-color: #050505;
             color: #a3a3a3;
-            cursor: none; /* Custom cursor */
+            cursor: none;
             overflow-x: hidden;
         }
 
@@ -79,9 +78,8 @@
         }
         body.hovering #cursor { width: 50px; height: 50px; background: rgba(0, 255, 65, 0.1); border-color: #00f3ff; }
 
-        /* Mobile specific adjustments */
         @media (max-width: 768px) {
-            #cursor, #cursor-dot { display: none; } /* Hide custom cursor on touch devices */
+            #cursor, #cursor-dot { display: none; }
             body { cursor: auto; }
         }
 
@@ -92,23 +90,18 @@
             font-family: 'Share Tech Mono', monospace; color: #00ff41;
         }
 
-        /* --- STORYLINE TIMELINE --- */
+        /* --- VISUALS --- */
         .story-line {
             position: absolute; left: 50%; top: 0; bottom: 0; width: 2px;
             background: linear-gradient(to bottom, transparent, #00ff41, #00f3ff, transparent);
             transform: translateX(-50%); opacity: 0.3;
         }
-        @media (max-width: 768px) { .story-line { left: 20px; } }
-
-        /* --- CHAPTER MARKERS --- */
         .chapter-marker {
             width: 16px; height: 16px; background: #050505; border: 2px solid #00ff41;
             border-radius: 50%; position: absolute; left: 50%; transform: translateX(-50%);
             box-shadow: 0 0 10px #00ff41; z-index: 10;
         }
-        @media (max-width: 768px) { .chapter-marker { left: 20px; } }
 
-        /* --- MISSION CARDS --- */
         .mission-card {
             background: rgba(10, 10, 10, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -123,7 +116,7 @@
         .mission-card:hover { border-color: #00ff41; transform: translateX(10px); }
         .mission-card:hover::before { transform: scaleY(1); }
 
-        /* --- HEXAGON PROFILE (ENLARGED) --- */
+        /* --- HEXAGON PROFILE --- */
         .hex-wrapper {
             position: relative; width: 320px; height: 320px; margin: 0 auto;
             display: flex; justify-content: center; align-items: center;
@@ -145,18 +138,7 @@
         }
         @keyframes pulse-hex { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
 
-        /* --- TYPEWRITER & GLITCH --- */
-        .glitch-text { position: relative; display: inline-block; }
-        .glitch-text::before, .glitch-text::after {
-            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: #050505;
-        }
-        .glitch-text::before { left: 2px; text-shadow: -1px 0 #ff00c1; clip: rect(44px, 450px, 56px, 0); animation: glitch-anim 5s infinite linear alternate-reverse; }
-        .glitch-text::after { left: -2px; text-shadow: -1px 0 #00fff9; clip: rect(44px, 450px, 56px, 0); animation: glitch-anim2 5s infinite linear alternate-reverse; }
-        @keyframes glitch-anim { 0% { clip: rect(14px, 9999px, 12px, 0); } 100% { clip: rect(83px, 9999px, 99px, 0); } }
-        @keyframes glitch-anim2 { 0% { clip: rect(69px, 9999px, 2px, 0); } 100% { clip: rect(3px, 9999px, 86px, 0); } }
-
-        /* Skill Bar */
+        /* --- SKILL BARS --- */
         .skill-container {
             background: #0a0a0a;
             border: 1px solid #333;
@@ -170,7 +152,7 @@
         .skill-bar-bg { width: 100%; height: 4px; background: #333; margin-top: 0.5rem; border-radius: 2px; }
         .skill-bar-fill { height: 100%; background: var(--skill-color); border-radius: 2px; box-shadow: 0 0 10px var(--skill-color); width: 0%; transition: width 1.5s ease-out; }
 
-        /* Mobile Menu */
+        /* --- MOBILE MENU --- */
         #mobile-menu {
             position: fixed; inset: 0; background: rgba(5, 5, 5, 0.98); 
             z-index: 45; display: flex; flex-direction: column; 
@@ -180,11 +162,19 @@
         }
         #mobile-menu.active { transform: translateX(0); }
 
+        .glitch-text { position: relative; display: inline-block; }
+        .glitch-text::before, .glitch-text::after {
+            content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: #050505;
+        }
+        .glitch-text::before { left: 2px; text-shadow: -1px 0 #ff00c1; clip: rect(44px, 450px, 56px, 0); animation: glitch-anim 5s infinite linear alternate-reverse; }
+        .glitch-text::after { left: -2px; text-shadow: -1px 0 #00fff9; clip: rect(44px, 450px, 56px, 0); animation: glitch-anim2 5s infinite linear alternate-reverse; }
+        @keyframes glitch-anim { 0% { clip: rect(14px, 9999px, 12px, 0); } 100% { clip: rect(83px, 9999px, 99px, 0); } }
+        @keyframes glitch-anim2 { 0% { clip: rect(69px, 9999px, 2px, 0); } 100% { clip: rect(3px, 9999px, 86px, 0); } }
     </style>
 </head>
 <body class="font-body">
 
-    <!-- BOOT SEQUENCE -->
     <div id="boot-screen">
         <div class="text-center">
             <div class="text-4xl mb-4 font-header">SYSTEM BOOT</div>
@@ -195,22 +185,17 @@
         </div>
     </div>
 
-    <!-- UI OVERLAYS -->
     <div class="scanlines"></div>
     <div id="cursor"></div>
     <div id="cursor-dot"></div>
-
-    <!-- BACKGROUND MATRIX (Fixed Canvas) -->
     <canvas id="matrix-bg" class="fixed top-0 left-0 w-full h-full -z-10 opacity-20"></canvas>
 
-    <!-- NAVIGATION -->
+    <!-- NAV -->
     <nav class="fixed top-0 w-full z-50 bg-ops-bg/90 backdrop-blur border-b border-white/5 px-6 py-4 flex justify-between items-center">
         <div class="flex items-center gap-3 relative z-50">
             <div class="w-2 h-2 bg-ops-green rounded-full animate-pulse"></div>
-            <span class="font-code text-ops-green tracking-widest text-sm">OP: MOHITH_H</span>
+            <span class="font-code text-ops-green tracking-widest text-sm">MP: MOHITH_H</span>
         </div>
-        
-        <!-- Desktop Menu -->
         <div class="hidden md:flex gap-8 text-xs font-code tracking-[0.2em] text-gray-500">
             <a href="#prologue" class="hover:text-ops-green transition-colors nav-link">01_PROLOGUE</a>
             <a href="#operations" class="hover:text-ops-cyan transition-colors nav-link">02_OPERATIONS</a>
@@ -218,87 +203,87 @@
             <a href="#intel" class="hover:text-ops-crimson transition-colors nav-link">04_INTEL_LOGS</a>
         </div>
         <div class="hidden md:block">
-            <a href="Mohith_H_Resume_.pdf" download class="border border-ops-green text-ops-green px-4 py-1 text-xs font-bold hover:bg-ops-green hover:text-black transition-all font-code nav-link">
+            <a href="Mohith_H_Resume.pdf" download class="border border-ops-green text-ops-green px-4 py-1 text-xs font-bold hover:bg-ops-green hover:text-black transition-all font-code nav-link">
                 [ DOWNLOAD_CV ]
             </a>
         </div>
-
-        <!-- Mobile Menu Button -->
         <button id="menu-btn" class="md:hidden relative z-50 text-ops-green focus:outline-none">
             <i data-lucide="menu" class="w-8 h-8"></i>
         </button>
     </nav>
 
-    <!-- Mobile Menu Overlay -->
     <div id="mobile-menu">
         <a href="#prologue" class="text-2xl font-header text-white hover:text-ops-green mobile-link">01 // PROLOGUE</a>
         <a href="#operations" class="text-2xl font-header text-white hover:text-ops-cyan mobile-link">02 // OPERATIONS</a>
         <a href="#arsenal" class="text-2xl font-header text-white hover:text-ops-gold mobile-link">03 // ARSENAL</a>
         <a href="#intel" class="text-2xl font-header text-white hover:text-ops-crimson mobile-link">04 // INTEL_LOGS</a>
-        <a href="Mohith_H_Resume_.pdf" download class="mt-8 border border-ops-green text-ops-green px-8 py-3 text-lg font-bold hover:bg-ops-green hover:text-black transition-all font-code mobile-link">
+        <a href="Mohith_H_Resume.pdf" download class="mt-8 border border-ops-green text-ops-green px-8 py-3 text-lg font-bold hover:bg-ops-green hover:text-black transition-all font-code mobile-link">
             [ DOWNLOAD_CV ]
         </a>
     </div>
 
     <main class="relative">
-        <!-- GLOBAL TIMELINE LINE -->
         <div class="story-line"></div>
 
-        <!-- CHAPTER 1: PROLOGUE (HERO) -->
+        <!-- 01 PROLOGUE -->
         <section id="prologue" class="min-h-screen flex items-center justify-center relative py-20">
             <div class="chapter-marker top-1/2"></div>
             
-            <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <div class="order-2 lg:order-1 text-center lg:text-left">
-                    <div class="font-code text-ops-green text-sm mb-2">> TRANSMISSION_INCOMING</div>
-                    <h1 class="text-5xl md:text-8xl font-header text-white mb-4 glitch-text" data-text="MOHITH H">
-                        MOHITH H
-                    </h1>
-                    <div class="text-xl md:text-2xl font-log text-ops-cyan mb-6">
+            <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center relative z-10">
+                
+                <!-- Text Column: Order 2 on mobile (text below image), Order 1 on desktop (left) -->
+                <div class="order-2 lg:order-1 flex flex-col items-center lg:items-start text-center lg:text-left">
+                    <div class="font-code text-ops-green text-sm mb-4 tracking-[0.2em] animate-pulse">>> TRANSMISSION_INCOMING</div>
+                    <h1 class="text-5xl md:text-8xl font-header text-white mb-6 leading-none glitch-text" data-text="MOHITH H">MOHITH H</h1>
+                    <div class="text-xl md:text-3xl font-log text-ops-cyan mb-8">
                         CLASS: <span id="typewriter"></span><span class="animate-pulse">_</span>
                     </div>
-                    <p class="text-base md:text-lg text-gray-400 mb-8 lg:border-l-2 border-ops-green lg:pl-6 max-w-xl mx-auto lg:mx-0">
-                        "The digital realm is chaotic. I bring order." <br><br>
-                        Elite Full-Stack Engineer and Creative Strategist. Specialized in architecting secure systems (React/Python) and executing high-level digital operations. 
-                        My mission is to bridge the gap between complex code and human experience.
+                    <p class="text-base md:text-xl text-gray-400 mb-10 leading-relaxed max-w-2xl lg:max-w-none font-body">
+                        "The digital realm is chaotic. I bring order." <br>
+                        Elite Full-Stack Engineer and Creative Strategist. Specialized in architecting secure systems and executing high-level digital operations.
                     </p>
-                    <div class="flex justify-center lg:justify-start gap-4">
-                        <a href="#operations" class="bg-ops-green text-black px-6 py-3 font-bold font-code hover:bg-white transition-colors nav-link">
+                    <div class="flex justify-center lg:justify-start gap-6">
+                        <a href="#operations" class="bg-ops-green text-black px-8 py-4 font-bold font-code hover:bg-white transition-colors nav-link tracking-widest clip-path-slant">
                             INITIATE_MISSION
                         </a>
                     </div>
                 </div>
 
-                <div class="order-1 lg:order-2 flex justify-center">
-                    <div class="hex-wrapper">
+                <!-- Image Column: Order 1 on mobile, Order 2 on desktop -->
+                <div class="order-1 lg:order-2 flex justify-center relative">
+                    <div class="hex-wrapper mb-12 lg:mb-0 relative group">
                         <div class="hex-border"></div>
                         <div class="hex-content">
                             <img src="https://media.licdn.com/dms/image/v2/D5603AQEdUMdXr8Mb0w/profile-displayphoto-scale_400_400/B56ZoKq7sJG4Ag-/0/1761115621794?e=1772064000&v=beta&t=zS2AlCc8IctR8Hr-PHc1ZFrvulrd_Ady8_O9_qcX2dg" alt="Agent Profile">
                         </div>
-                        <!-- Decorative HUD Elements (Hidden on tiny screens) -->
-                        <div class="hidden sm:block absolute -top-10 -right-10 text-[10px] font-code text-ops-cyan text-right">
-                            ID: 593-A<br>LOC: INDIA<br>CLR: LVL_10
+                        <!-- HUD Elements -->
+                        <div class="hidden md:block absolute top-1/2 -right-32 transform -translate-y-1/2 text-left opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <div class="text-xs font-code text-ops-cyan leading-relaxed border-l-2 border-ops-cyan pl-2">
+                                ID: 593-A<br>LOC: INDIA<br>CLR: LVL_10
+                            </div>
                         </div>
-                        <div class="hidden sm:block absolute -bottom-10 -left-10 text-[10px] font-code text-ops-crimson">
-                            STATUS: ACTIVE<br>SYS: ONLINE
+                        <div class="hidden md:block absolute top-1/2 -left-32 transform -translate-y-1/2 text-right opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <div class="text-xs font-code text-ops-crimson leading-relaxed border-r-2 border-ops-crimson pr-2">
+                                STATUS: ACTIVE<br>SYS: ONLINE
+                            </div>
                         </div>
                     </div>
                 </div>
+
             </div>
         </section>
 
-        <!-- CHAPTER 2: OPERATIONS (PROJECTS) -->
+        <!-- 02 OPERATIONS -->
         <section id="operations" class="py-24 relative">
             <div class="chapter-marker top-24"></div>
             <div class="container mx-auto px-6 relative z-10">
                 <div class="text-center mb-16">
-                    <h2 class="text-2xl md:text-3xl font-header text-white mb-2">ACTIVE OPERATIONS</h2>
-                    <p class="font-code text-ops-cyan text-sm md:text-base">Decrypted PROJECT Files: 8</p>
+                    <h2 class="text-4xl md:text-5xl font-header text-white mb-2">TOP_PROJECTS</h2>
+                    <p class="font-code text-ops-cyan text-sm md:text-base">Decrypted PROJECT Files: 20+</p>
                 </div>
 
-                <!-- Mission Grid -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-                    <!-- Project Cards kept same as requested -->
+                    <!-- Project 1 -->
                     <a href="https://github.com/Mohithanjan23/LeakPeek" target="_blank" class="mission-card p-6 md:p-8 group nav-link">
                         <div class="flex justify-between items-start mb-6">
                             <div class="font-header text-xl md:text-2xl text-ops-crimson">OP: LEAKPEEK</div>
@@ -309,11 +294,10 @@
                             > TECH: Python, Tor, Flutter<br>
                             > STATUS: <span class="text-ops-crimson animate-pulse">THREAT_DETECTED</span>
                         </div>
-                        <p class="text-sm text-gray-300">
-                            Deployed a mobile-first interception system to detect data breaches via Tor onion routing. Integrated real-time alerts for immediate threat neutralization.
-                        </p>
+                        <p class="text-sm text-gray-300">Deployed a mobile-first interception system to detect data breaches via Tor onion routing.</p>
                     </a>
 
+                    <!-- Project 2 -->
                     <a href="https://github.com/Mohithanjan23/calplate" target="_blank" class="mission-card p-6 md:p-8 group nav-link">
                         <div class="flex justify-between items-start mb-6">
                             <div class="font-header text-xl md:text-2xl text-ops-green">OP: CALPLATE</div>
@@ -324,11 +308,10 @@
                             > TECH: MERN Stack, Node.js<br>
                             > STATUS: OPERATIONAL
                         </div>
-                        <p class="text-sm text-gray-300">
-                            Engineered an AI-powered bio-metric tracking system. Utilizes caloric analysis algorithms to optimize operator physical readiness and nutrition.
-                        </p>
+                        <p class="text-sm text-gray-300">Engineered an AI-powered bio-metric tracking system utilizing caloric analysis algorithms.</p>
                     </a>
 
+                    <!-- Project 3 -->
                     <a href="https://github.com/Mohithanjan23/JohnnyAI" target="_blank" class="mission-card p-6 md:p-8 group nav-link">
                         <div class="flex justify-between items-start mb-6">
                             <div class="font-header text-xl md:text-2xl text-ops-cyan">OP: JOHNNY_AI</div>
@@ -339,11 +322,10 @@
                             > TECH: Python, NLP, Speech Rec<br>
                             > STATUS: LISTENING...
                         </div>
-                        <p class="text-sm text-gray-300">
-                            Constructed a voice-activated virtual assistant. Capable of executing OS-level commands and retrieving intelligence hands-free.
-                        </p>
+                        <p class="text-sm text-gray-300">Constructed a voice-activated virtual assistant capable of executing OS-level commands.</p>
                     </a>
 
+                    <!-- Project 4 -->
                     <a href="https://github.com/Mohithanjan23/Smile-Hard" target="_blank" class="mission-card p-6 md:p-8 group nav-link">
                         <div class="flex justify-between items-start mb-6">
                             <div class="font-header text-xl md:text-2xl text-ops-gold">OP: SMILE_HARD</div>
@@ -354,11 +336,10 @@
                             > TECH: OpenCV, PyGame<br>
                             > STATUS: LIVE
                         </div>
-                        <p class="text-sm text-gray-300">
-                            Developed a real-time facial recognition interface gamified for reflex training. Uses advanced computer vision to map expressions to inputs.
-                        </p>
+                        <p class="text-sm text-gray-300">Developed a real-time facial recognition interface gamified for reflex training.</p>
                     </a>
 
+                    <!-- Project 5 -->
                     <a href="https://github.com/Mohithanjan23/content-wind" target="_blank" class="mission-card p-6 md:p-8 group nav-link">
                         <div class="flex justify-between items-start mb-6">
                             <div class="font-header text-xl md:text-2xl text-ops-purple">OP: CNT_WIND</div>
@@ -369,11 +350,10 @@
                             > TECH: React, OpenAI API<br>
                             > STATUS: GENERATING
                         </div>
-                        <p class="text-sm text-gray-300">
-                            AI-driven content generation tool. Analyzes trends and creates targeted messaging for digital platforms to maximize engagement.
-                        </p>
+                        <p class="text-sm text-gray-300">AI-driven content generation tool analyzing trends for targeted messaging.</p>
                     </a>
 
+                    <!-- Project 6 -->
                     <a href="https://github.com/Mohithanjan23/crackbank-frontend" target="_blank" class="mission-card p-6 md:p-8 group nav-link">
                         <div class="flex justify-between items-start mb-6">
                             <div class="font-header text-xl md:text-2xl text-blue-500">OP: CRACKBANK</div>
@@ -384,11 +364,10 @@
                             > TECH: JS, SQL, Auth<br>
                             > STATUS: SECURE
                         </div>
-                        <p class="text-sm text-gray-300">
-                            Secure banking infrastructure simulation. Handles encrypted transactions and account management protocols.
-                        </p>
+                        <p class="text-sm text-gray-300">Secure banking infrastructure simulation handling encrypted transactions.</p>
                     </a>
 
+                    <!-- Project 7 -->
                     <a href="https://github.com/Mohithanjan23/CinePlan" target="_blank" class="mission-card p-6 md:p-8 group nav-link">
                         <div class="flex justify-between items-start mb-6">
                             <div class="font-header text-xl md:text-2xl text-ops-pink">OP: CINEPLAN</div>
@@ -399,12 +378,11 @@
                             > TECH: React, Gemini AI, Maps<br>
                             > STATUS: DEPLOYED
                         </div>
-                        <p class="text-sm text-gray-300">
-                            Production logistics suite. Integrates weather telemetry and AI shot generation to coordinate field operations for creators.
-                        </p>
+                        <p class="text-sm text-gray-300">Production logistics suite integrating weather telemetry and AI shot generation.</p>
                     </a>
 
-                     <a href="https://drive.google.com/drive/folders/1XUXWj9XFbsAQZVvcNpJ2u5hmS9wk3u6e" target="_blank" class="mission-card p-6 md:p-8 group nav-link">
+                    <!-- Project 8 -->
+                    <a href="https://drive.google.com/drive/folders/1XUXWj9XFbsAQZVvcNpJ2u5hmS9wk3u6e" target="_blank" class="mission-card p-6 md:p-8 group nav-link">
                         <div class="flex justify-between items-start mb-6">
                             <div class="font-header text-xl md:text-2xl text-orange-500">OP: VISUALS</div>
                             <i data-lucide="pen-tool" class="text-orange-500"></i>
@@ -414,28 +392,26 @@
                             > TECH: Figma, Adobe Suite<br>
                             > STATUS: ARCHIVED
                         </div>
-                        <p class="text-sm text-gray-300">
-                            Collection of UI/UX designs and branding assets used in various campaigns and digital fronts.
-                        </p>
+                        <p class="text-sm text-gray-300">Collection of UI/UX designs and branding assets used in various campaigns.</p>
                     </a>
                 </div>
             </div>
         </section>
 
-        <!-- CHAPTER 3: ARSENAL (SKILLS) -->
+        <!-- 03 ARSENAL (SKILLS) -->
         <section id="arsenal" class="py-24 relative bg-ops-panel/50">
             <div class="chapter-marker top-24"></div>
             <div class="container mx-auto px-6 relative z-10">
                 <div class="text-center mb-16">
-                    <h2 class="text-2xl md:text-3xl font-header text-white mb-2">SKILL_LOADOUT</h2>
+                    <h2 class="text-4xl md:text-5xl font-header text-white mb-2">SKILL_LOADOUT</h2>
                     <p class="font-code text-gray-500 text-sm md:text-base">SKILL_CLASSIFICATION_MATRIX</p>
                 </div>
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
                     
-                    <!-- COLUMN 1: DEVELOPMENT & ENGINEERING -->
+                    <!-- COLUMN 1: DEVELOPMENT -->
                     <div class="space-y-4">
-                        <h3 class="text-xl font-header text-ops-cyan mb-6 border-b border-ops-cyan/30 pb-2 flex items-center gap-2">
+                        <h3 class="text-xl font-header text-ops-cyan mb-6 border-b border-ops-cyan/30 pb-2 flex items-center justify-center gap-2">
                             <i data-lucide="code-2" class="w-5 h-5"></i> DEV_&_ENGINEERING
                         </h3>
                         
@@ -443,179 +419,150 @@
                             <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">JAVA</span><span class="text-red-500">90%</span></div>
                             <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%"></div></div>
                         </div>
-                        
                         <div class="skill-container" style="--skill-color: #3b82f6;">
                             <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">PYTHON</span><span class="text-blue-500">95%</span></div>
                             <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 95%"></div></div>
                         </div>
-
-                        <div class="skill-container" style="--skill-color: #fbbf24;">
+                        <div class="skill-container" style="--skill-color: #facc15;">
                             <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">JAVASCRIPT</span><span class="text-yellow-400">92%</span></div>
                             <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 92%"></div></div>
                         </div>
-
-                         <div class="skill-container" style="--skill-color: #22c55e;">
+                        <div class="skill-container" style="--skill-color: #22c55e;">
                             <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">NODE.JS</span><span class="text-green-500">88%</span></div>
                             <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 88%"></div></div>
                         </div>
-
                         <div class="skill-container" style="--skill-color: #06b6d4;">
                             <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">REACT</span><span class="text-cyan-500">85%</span></div>
                             <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%"></div></div>
                         </div>
-
-                        <div class="skill-container" style="--skill-color: #60a5fa;">
-                            <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">FLUTTER</span><span class="text-blue-400">80%</span></div>
+                        <div class="skill-container" style="--skill-color: #3b82f6;">
+                            <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">FLUTTER</span><span class="text-blue-500">80%</span></div>
                             <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 80%"></div></div>
                         </div>
-
-                         <div class="skill-container" style="--skill-color: #2dd4bf;">
+                        <div class="skill-container" style="--skill-color: #2dd4bf;">
                             <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">SQL</span><span class="text-teal-400">85%</span></div>
                             <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%"></div></div>
                         </div>
-
-                         <div class="skill-container" style="--skill-color: #f97316;">
+                        <div class="skill-container" style="--skill-color: #f97316;">
                             <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">AWS</span><span class="text-orange-500">75%</span></div>
                             <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 75%"></div></div>
                         </div>
-                         
-                         <div class="skill-container" style="--skill-color: #eab308;">
+                        <div class="skill-container" style="--skill-color: #eab308;">
                             <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">CYBERSECURITY</span><span class="text-yellow-500">85%</span></div>
                             <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%"></div></div>
                         </div>
                     </div>
 
-                    <!-- COLUMN 2: DESIGN & CREATIVE -->
-                     <div class="space-y-4">
-                        <h3 class="text-xl font-header text-ops-pink mb-6 border-b border-ops-pink/30 pb-2 flex items-center gap-2">
+                    <!-- COLUMN 2: DESIGN -->
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-header text-ops-pink mb-6 border-b border-ops-pink/30 pb-2 flex items-center justify-center gap-2">
                             <i data-lucide="palette" class="w-5 h-5"></i> DESIGN_&_CREATIVE
                         </h3>
-                        
                         <div class="skill-container" style="--skill-color: #f472b6;">
                             <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">UI/UX DESIGN</span><span class="text-pink-400">90%</span></div>
                             <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%"></div></div>
                         </div>
-
                         <div class="skill-container" style="--skill-color: #a855f7;">
                             <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">FIGMA</span><span class="text-purple-500">95%</span></div>
                             <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 95%"></div></div>
                         </div>
-
                         <div class="skill-container" style="--skill-color: #c084fc;">
                             <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">GRAPHIC DESIGN</span><span class="text-purple-400">90%</span></div>
                             <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%"></div></div>
                         </div>
-
-                         <div class="skill-container" style="--skill-color: #ffffff;">
+                        <div class="skill-container" style="--skill-color: #ffffff;">
                             <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">THREE.JS</span><span class="text-gray-200">70%</span></div>
                             <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 70%"></div></div>
                         </div>
-
                         <div class="skill-container" style="--skill-color: #ec4899;">
                             <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">VIDEO EDITING</span><span class="text-pink-500">85%</span></div>
                             <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%"></div></div>
                         </div>
-                     </div>
+                    </div>
 
-                    <!-- COLUMN 3: TOOLS & MANAGEMENT -->
-                     <div class="space-y-4">
-                        <h3 class="text-xl font-header text-ops-green mb-6 border-b border-ops-green/30 pb-2 flex items-center gap-2">
+                    <!-- COLUMN 3: TOOLS -->
+                    <div class="space-y-4">
+                        <h3 class="text-xl font-header text-ops-green mb-6 border-b border-ops-green/30 pb-2 flex items-center justify-center gap-2">
                             <i data-lucide="wrench" class="w-5 h-5"></i> TOOLS_&_MGMT
                         </h3>
-                        
                         <div class="skill-container" style="--skill-color: #9ca3af;">
                             <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">GITHUB</span><span class="text-gray-400">90%</span></div>
                             <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 90%"></div></div>
                         </div>
-
-                         <div class="skill-container" style="--skill-color: #4ade80;">
+                        <div class="skill-container" style="--skill-color: #4ade80;">
                             <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">DIGITAL MARKETING</span><span class="text-green-400">85%</span></div>
                             <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 85%"></div></div>
                         </div>
-
                         <div class="skill-container" style="--skill-color: #818cf8;">
                             <div class="flex justify-between font-code text-sm mb-1"><span class="text-white">CONTENT CREATION</span><span class="text-indigo-400">95%</span></div>
                             <div class="skill-bar-bg"><div class="skill-bar-fill" style="width: 95%"></div></div>
                         </div>
-                     </div>
-
+                    </div>
                 </div>
 
-                <!-- CERTIFICATIONS SECTION -->
-                 <div class="mt-24">
+                <!-- CERTIFICATIONS -->
+                <div class="mt-24">
                     <div class="text-center mb-12">
                          <h3 class="text-2xl md:text-3xl font-header text-white mb-2">CERTIFIED_MODULES</h3>
                          <p class="font-code text-gray-500 text-sm">CERTIFICATION_DATABASE</p>
                     </div>
                     
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                         <!-- Cert 1 -->
                         <div class="border border-white/10 p-4 bg-white/5 hover:border-ops-green transition-colors group">
                             <i data-lucide="award" class="text-ops-green mb-2 w-6 h-6"></i>
                             <div class="font-bold text-white text-sm">UX DESIGN BASICS</div>
                             <div class="text-xs font-code text-gray-500">LEARNTUBE.AI</div>
                         </div>
-                        <!-- Cert 2 -->
                         <div class="border border-white/10 p-4 bg-white/5 hover:border-ops-cyan transition-colors group">
                             <i data-lucide="layout" class="text-ops-cyan mb-2 w-6 h-6"></i>
                             <div class="font-bold text-white text-sm">RESPONSIVE WEB DESIGN</div>
                             <div class="text-xs font-code text-gray-500">FREECODECAMP</div>
                         </div>
-                         <!-- Cert 3 -->
                         <div class="border border-white/10 p-4 bg-white/5 hover:border-ops-gold transition-colors group">
                             <i data-lucide="cloud" class="text-ops-gold mb-2 w-6 h-6"></i>
                             <div class="font-bold text-white text-sm">AWS SOL. ARCHITECT</div>
                             <div class="text-xs font-code text-gray-500">FORAGE</div>
                         </div>
-                         <!-- Cert 4 -->
                         <div class="border border-white/10 p-4 bg-white/5 hover:border-ops-crimson transition-colors group">
                             <i data-lucide="shield-check" class="text-ops-crimson mb-2 w-6 h-6"></i>
                             <div class="font-bold text-white text-sm">CYBERSECURITY ANALYST</div>
                             <div class="text-xs font-code text-gray-500">TATA GROUP</div>
                         </div>
-                         <!-- Cert 5 -->
                         <div class="border border-white/10 p-4 bg-white/5 hover:border-blue-400 transition-colors group">
                             <i data-lucide="bar-chart-2" class="text-blue-400 mb-2 w-6 h-6"></i>
                             <div class="font-bold text-white text-sm">DATA ANALYTICS VIRTUAL</div>
                             <div class="text-xs font-code text-gray-500">FORAGE</div>
                         </div>
-                         <!-- Cert 6 -->
                         <div class="border border-white/10 p-4 bg-white/5 hover:border-purple-500 transition-colors group">
                             <i data-lucide="code" class="text-purple-500 mb-2 w-6 h-6"></i>
                             <div class="font-bold text-white text-sm">C# FOUNDATIONS</div>
                             <div class="text-xs font-code text-gray-500">MICROSOFT</div>
                         </div>
-                         <!-- Cert 7 -->
                         <div class="border border-white/10 p-4 bg-white/5 hover:border-yellow-500 transition-colors group">
                             <i data-lucide="database" class="text-yellow-500 mb-2 w-6 h-6"></i>
                             <div class="font-bold text-white text-sm">LINUX & SQL</div>
                             <div class="text-xs font-code text-gray-500">COURSERA</div>
                         </div>
-                         <!-- Cert 8 -->
                         <div class="border border-white/10 p-4 bg-white/5 hover:border-red-500 transition-colors group">
                             <i data-lucide="lock" class="text-red-500 mb-2 w-6 h-6"></i>
-                            <div class="font-bold text-white text-sm">FOUNDATIONS OF CYBERSEC</div>
+                            <div class="font-bold text-white text-sm">CYBERSECURITY FOUNDATIONS</div>
                             <div class="text-xs font-code text-gray-500">COURSERA</div>
                         </div>
-                         <!-- Cert 9 -->
                         <div class="border border-white/10 p-4 bg-white/5 hover:border-indigo-400 transition-colors group">
                             <i data-lucide="shield" class="text-indigo-400 mb-2 w-6 h-6"></i>
                             <div class="font-bold text-white text-sm">NETWORK & RISK SECURITY</div>
                             <div class="text-xs font-code text-gray-500">COURSERA</div>
                         </div>
-                         <!-- Cert 10 -->
                         <div class="border border-white/10 p-4 bg-white/5 hover:border-teal-400 transition-colors group">
                             <i data-lucide="terminal-square" class="text-teal-400 mb-2 w-6 h-6"></i>
                             <div class="font-bold text-white text-sm">SOFTWARE ENG. JOB SIM</div>
                             <div class="text-xs font-code text-gray-500">ACCENTURE</div>
                         </div>
-                         <!-- Cert 11 -->
                         <div class="border border-white/10 p-4 bg-white/5 hover:border-orange-400 transition-colors group">
                             <i data-lucide="pie-chart" class="text-orange-400 mb-2 w-6 h-6"></i>
                             <div class="font-bold text-white text-sm">DATA ANALYTICS JOB SIM</div>
                             <div class="text-xs font-code text-gray-500">QUANTIUM</div>
                         </div>
-                         <!-- Cert 12 -->
                         <div class="border border-white/10 p-4 bg-white/5 hover:border-rose-500 transition-colors group">
                             <i data-lucide="alert-triangle" class="text-rose-500 mb-2 w-6 h-6"></i>
                             <div class="font-bold text-white text-sm">MANAGE SECURITY RISKS</div>
@@ -626,7 +573,7 @@
             </div>
         </section>
 
-        <!-- CHAPTER 4: INTEL LOGS (EXPERIENCE) -->
+        <!-- 04 INTEL LOGS -->
         <section id="intel" class="py-24 relative">
             <div class="chapter-marker top-24"></div>
             <div class="container mx-auto px-6 relative z-10 max-w-6xl">
@@ -637,12 +584,10 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
                     
-                    <!-- LEFT COLUMN: WORK HISTORY -->
+                    <!-- LEFT COLUMN -->
                     <div>
-                         <h3 class="text-2xl font-header text-white mb-8 border-b border-gray-800 pb-2">WORK_HISTORY</h3>
+                         <h3 class="text-2xl font-header text-white mb-8 border-b border-gray-800 pb-2 text-center">WORK_HISTORY</h3>
                          <div class="space-y-8 border-l-2 border-white/10 pl-6 md:pl-8 ml-2">
-                             
-                             <!-- Work 1 -->
                              <div class="relative group">
                                 <div class="absolute -left-[2.35rem] top-0 w-4 h-4 bg-ops-cyan rounded-full border-2 border-black group-hover:scale-125 transition-transform"></div>
                                 <div class="bg-ops-panel p-6 border border-white/5 hover:border-ops-cyan transition-colors">
@@ -652,12 +597,10 @@
                                     </div>
                                     <p class="font-log text-sm text-gray-400">
                                         > Developing scalable applications.<br>
-                                        > Coordinating with product management to translate roadmap requirements into functional solutions.
+                                        > Coordinating with product management to translate roadmap requirements.
                                     </p>
                                 </div>
                             </div>
-
-                            <!-- Work 2 -->
                             <div class="relative group">
                                 <div class="absolute -left-[2.35rem] top-0 w-4 h-4 bg-ops-green rounded-full border-2 border-black group-hover:scale-125 transition-transform"></div>
                                 <div class="bg-ops-panel p-6 border border-white/5 hover:border-ops-green transition-colors">
@@ -667,20 +610,17 @@
                                     </div>
                                     <p class="font-log text-sm text-gray-400">
                                         > Upgraded frontend control panel using React.<br>
-                                        > Implemented backend logic in Python & containerised stack with Docker.<br>
-                                        > Assembled robot hardware and end-effectors.
+                                        > Implemented backend logic in Python & containerised stack with Docker.
                                     </p>
                                 </div>
                             </div>
                          </div>
                     </div>
 
-                    <!-- RIGHT COLUMN: LEADERSHIP & VOLUNTEERING -->
+                    <!-- RIGHT COLUMN -->
                      <div>
-                         <h3 class="text-2xl font-header text-white mb-8 border-b border-gray-800 pb-2">LEADERSHIP</h3>
+                         <h3 class="text-2xl font-header text-white mb-8 border-b border-gray-800 pb-2 text-center">LEADERSHIP & VOLUNTEERING</h3>
                          <div class="space-y-8 border-l-2 border-white/10 pl-6 md:pl-8 ml-2">
-
-                            <!-- Lead 1 -->
                             <div class="relative group">
                                 <div class="absolute -left-[2.35rem] top-0 w-4 h-4 bg-blue-500 rounded-full border-2 border-black group-hover:scale-125 transition-transform"></div>
                                 <div class="bg-ops-panel p-6 border border-white/5 hover:border-blue-500 transition-colors">
@@ -694,8 +634,6 @@
                                     </p>
                                 </div>
                             </div>
-
-                            <!-- Lead 2 -->
                             <div class="relative group">
                                 <div class="absolute -left-[2.35rem] top-0 w-4 h-4 bg-purple-500 rounded-full border-2 border-black group-hover:scale-125 transition-transform"></div>
                                 <div class="bg-ops-panel p-6 border border-white/5 hover:border-purple-500 transition-colors">
@@ -709,8 +647,6 @@
                                     </p>
                                 </div>
                             </div>
-
-                             <!-- Lead 3 -->
                             <div class="relative group">
                                 <div class="absolute -left-[2.35rem] top-0 w-4 h-4 bg-ops-gold rounded-full border-2 border-black group-hover:scale-125 transition-transform"></div>
                                 <div class="bg-ops-panel p-6 border border-white/5 hover:border-ops-gold transition-colors">
@@ -724,13 +660,11 @@
                                     </p>
                                 </div>
                             </div>
-
-                             <!-- Lead 4 -->
                             <div class="relative group">
                                 <div class="absolute -left-[2.35rem] top-0 w-4 h-4 bg-yellow-400 rounded-full border-2 border-black group-hover:scale-125 transition-transform"></div>
                                 <div class="bg-ops-panel p-6 border border-white/5 hover:border-yellow-400 transition-colors">
                                     <div class="flex flex-col justify-between mb-2">
-                                        <h4 class="text-xl font-header text-yellow-400">PESU TALKIES <span class="text-sm font-body text-white block md:inline">// DIRECTOR; DEPUTY HEAD</span></h4>
+                                        <h4 class="text-xl font-header text-yellow-400">PESU TALKIES <span class="text-sm font-body text-white block md:inline">// DIRECTOR; DEPUTY_HEAD</span></h4>
                                         <span class="font-code text-xs text-gray-500">JAN 2024 - MAY 2025</span>
                                     </div>
                                     <p class="font-log text-sm text-gray-400">
@@ -739,8 +673,6 @@
                                     </p>
                                 </div>
                             </div>
-
-                             <!-- Lead 5 -->
                             <div class="relative group">
                                 <div class="absolute -left-[2.35rem] top-0 w-4 h-4 bg-cyan-500 rounded-full border-2 border-black group-hover:scale-125 transition-transform"></div>
                                 <div class="bg-ops-panel p-6 border border-white/5 hover:border-cyan-500 transition-colors">
@@ -754,7 +686,31 @@
                                     </p>
                                 </div>
                             </div>
-
+                            <!-- Added from Index2.html per request -->
+                            <div class="relative group">
+                                <div class="absolute -left-[2.35rem] top-0 w-4 h-4 bg-red-500 rounded-full border-2 border-black group-hover:scale-125 transition-transform"></div>
+                                <div class="bg-ops-panel p-6 border border-white/5 hover:border-red-500 transition-colors">
+                                    <div class="flex flex-col justify-between mb-2">
+                                        <h4 class="text-xl font-header text-red-500">KANNADA KOOTA <span class="text-sm font-body text-white block md:inline">// PR & MARKETING</span></h4>
+                                        <span class="font-code text-xs text-gray-500">OCT 2023 - FEB 2024</span>
+                                    </div>
+                                    <p class="font-log text-sm text-gray-400">
+                                        > Managed public relations and marketing for cultural events.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="relative group">
+                                <div class="absolute -left-[2.35rem] top-0 w-4 h-4 bg-green-500 rounded-full border-2 border-black group-hover:scale-125 transition-transform"></div>
+                                <div class="bg-ops-panel p-6 border border-white/5 hover:border-green-500 transition-colors">
+                                    <div class="flex flex-col justify-between mb-2">
+                                        <h4 class="text-xl font-header text-green-500">SAMARPANA INDIA <span class="text-sm font-body text-white block md:inline">// CAMPAIGNING</span></h4>
+                                        <span class="font-code text-xs text-gray-500">OCT 2023 - DEC 2023</span>
+                                    </div>
+                                    <p class="font-log text-sm text-gray-400">
+                                        > Executed grassroots campaigning and outreach protocols.
+                                    </p>
+                                </div>
+                            </div>
                          </div>
                      </div>
 
@@ -762,56 +718,42 @@
             </div>
         </section>
 
-        <!-- FOOTER: END GAME -->
         <footer class="py-16 bg-black border-t border-ops-green/20 relative overflow-hidden">
             <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-full max-w-lg h-px bg-gradient-to-r from-transparent via-ops-green to-transparent"></div>
-            
             <div class="text-center relative z-10 px-6">
                 <h2 class="text-2xl md:text-3xl font-header text-white mb-2">PLAYER_CONNECTION</h2>
-                
                 <div class="flex flex-wrap justify-center gap-4 md:gap-8 mb-10">
                     <a href="mailto:mohithanjan23@gmail.com" class="text-ops-green font-code hover:text-white transition-colors">[ EMAIL ]</a>
                     <a href="https://linkedin.com/in/mohithanjan" class="text-ops-cyan font-code hover:text-white transition-colors">[ LINKEDIN ]</a>
                     <a href="https://github.com/Mohithanjan23" class="text-ops-crimson font-code hover:text-white transition-colors">[ GITHUB ]</a>
                 </div>
-                
-                <p class="text-gray-600 font-code text-xs">
-                    SYSTEM_ID: MOHITH_H // TERMINAL_SESSION_CLOSED
-                </p>
+                <p class="text-gray-600 font-code text-xs">SYSTEM_ID: MOHITH_H // TERMINAL_SESSION_CLOSED</p>
             </div>
         </footer>
 
     </main>
 
     <script>
-        // --- BOOT SEQUENCE ---
         window.addEventListener('load', () => {
             const bootScreen = document.getElementById('boot-screen');
             const bootBar = document.getElementById('boot-bar');
             const bootText = document.getElementById('boot-text');
-            
             let width = 0;
             const interval = setInterval(() => {
                 if (width >= 100) {
                     clearInterval(interval);
                     bootText.innerText = "ACCESS GRANTED";
-                    setTimeout(() => {
-                        gsap.to(bootScreen, { opacity: 0, duration: 1, onComplete: () => bootScreen.style.display = 'none' });
-                    }, 500);
+                    setTimeout(() => { gsap.to(bootScreen, { opacity: 0, duration: 1, onComplete: () => bootScreen.style.display = 'none' }); }, 500);
                 } else {
-                    width += Math.random() * 10; // Random speed
+                    width += Math.random() * 10; 
                     if(width > 100) width = 100;
                     if(bootBar) bootBar.style.width = width + '%';
                 }
             }, 100);
         });
 
-        // --- ICONS ---
-        if (window.lucide) {
-            lucide.createIcons();
-        }
+        if (window.lucide) lucide.createIcons();
 
-        // --- MOBILE MENU LOGIC ---
         const menuBtn = document.getElementById('menu-btn');
         const mobileMenu = document.getElementById('mobile-menu');
         const mobileLinks = document.querySelectorAll('.mobile-link');
@@ -838,148 +780,66 @@
             });
         });
 
-        // --- CUSTOM CURSOR ---
         const cursor = document.getElementById('cursor');
         const cursorDot = document.getElementById('cursor-dot');
-        
         document.addEventListener('mousemove', (e) => {
-            if(cursor && window.innerWidth > 768) {
-                cursor.style.left = e.clientX + 'px';
-                cursor.style.top = e.clientY + 'px';
-            }
-            if(cursorDot && window.innerWidth > 768) {
-                cursorDot.style.left = e.clientX + 'px';
-                cursorDot.style.top = e.clientY + 'px';
-            }
+            if(cursor && window.innerWidth > 768) { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; }
+            if(cursorDot && window.innerWidth > 768) { cursorDot.style.left = e.clientX + 'px'; cursorDot.style.top = e.clientY + 'px'; }
         });
-
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
             link.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
         });
 
-        // --- MATRIX RAIN ---
         const canvas = document.getElementById('matrix-bg');
         if (canvas) {
             const ctx = canvas.getContext('2d');
             let width, height;
-            
-            function resize() {
-                width = canvas.width = window.innerWidth;
-                height = canvas.height = window.innerHeight;
-            }
+            function resize() { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; }
             window.addEventListener('resize', resize);
             resize();
-
             const cols = Math.floor(width / 20);
             const ypos = Array(cols).fill(0);
-
             function matrix() {
-                ctx.fillStyle = '#0001';
-                ctx.fillRect(0, 0, width, height);
-                ctx.fillStyle = '#0f0';
-                ctx.font = '15pt monospace';
-                
+                ctx.fillStyle = '#0001'; ctx.fillRect(0, 0, width, height); ctx.fillStyle = '#0f0'; ctx.font = '15pt monospace';
                 ypos.forEach((y, ind) => {
                     const text = String.fromCharCode(Math.random() * 128);
                     const x = ind * 20;
                     ctx.fillText(text, x, y);
-                    if (y > 100 + Math.random() * 10000) ypos[ind] = 0;
-                    else ypos[ind] = y + 20;
+                    if (y > 100 + Math.random() * 10000) ypos[ind] = 0; else ypos[ind] = y + 20;
                 });
             }
             setInterval(matrix, 50);
         }
 
-        // --- TYPEWRITER ---
-        const roles = ["FULL_STACK_DEV", "CYBER_ANALYST", "STRATEGIST"];
-        let rIdx = 0;
-        let cIdx = 0;
-        let isDeleting = false;
+        const roles = ["FULL_STACK_DEV", "CYBER_ANALYST", "BRAND_STRATEGIST", "UI/UX DESIGNER", "GRAPHIC_DESIGNER", "MARKETING_SPECIALIST", "CONTENT_CREATOR"];
+        let rIdx = 0, cIdx = 0, isDeleting = false;
         const typeEl = document.getElementById('typewriter');
-
         function typeLoop() {
             if (!typeEl) return;
             const currentRole = roles[rIdx];
-            
-            if (isDeleting) {
-                typeEl.innerText = currentRole.substring(0, cIdx - 1);
-                cIdx--;
-            } else {
-                typeEl.innerText = currentRole.substring(0, cIdx + 1);
-                cIdx++;
-            }
-
+            if (isDeleting) { typeEl.innerText = currentRole.substring(0, cIdx - 1); cIdx--; } 
+            else { typeEl.innerText = currentRole.substring(0, cIdx + 1); cIdx++; }
             let speed = isDeleting ? 50 : 100;
-
-            if (!isDeleting && cIdx === currentRole.length) {
-                speed = 2000;
-                isDeleting = true;
-            } else if (isDeleting && cIdx === 0) {
-                isDeleting = false;
-                rIdx = (rIdx + 1) % roles.length;
-                speed = 500;
-            }
-            // Fix variable scope issue from previous logic
-            if(!isDeleting && cIdx === currentRole.length) {
-                 isDeleting = true;
-                 speed = 2000;
-            } else if (isDeleting && cIdx === 0) {
-                isDeleting = false;
-                rIdx = (rIdx + 1) % roles.length;
-                speed = 500;
-            }
-            
+            if (!isDeleting && cIdx === currentRole.length) { speed = 2000; isDeleting = true; } 
+            else if (isDeleting && cIdx === 0) { isDeleting = false; rIdx = (rIdx + 1) % roles.length; speed = 500; }
             setTimeout(typeLoop, speed);
         }
         typeLoop();
 
-        // --- SCROLL ANIMATIONS ---
         if (window.gsap && window.ScrollTrigger) {
             gsap.registerPlugin(ScrollTrigger);
-
-            // Animate Markers
             gsap.utils.toArray('.chapter-marker').forEach(marker => {
-                gsap.from(marker, {
-                    scale: 0,
-                    opacity: 0,
-                    scrollTrigger: {
-                        trigger: marker,
-                        start: "top 80%",
-                        toggleActions: "play none none reverse"
-                    }
-                });
+                gsap.from(marker, { scale: 0, opacity: 0, scrollTrigger: { trigger: marker, start: "top 80%", toggleActions: "play none none reverse" } });
             });
-
-            // Animate Cards
             gsap.utils.toArray('.mission-card').forEach((card, i) => {
-                gsap.from(card, {
-                    y: 50,
-                    opacity: 0,
-                    duration: 0.6,
-                    delay: i * 0.1,
-                    scrollTrigger: {
-                        trigger: card,
-                        start: "top 90%"
-                    }
-                });
+                gsap.from(card, { y: 50, opacity: 0, duration: 0.6, delay: i * 0.1, scrollTrigger: { trigger: card, start: "top 90%" } });
             });
-
-            // Animate Skill Bars
              gsap.utils.toArray('.skill-container').forEach((skill) => {
                 const fill = skill.querySelector('.skill-bar-fill');
                 const width = fill.style.width;
                 fill.style.width = '0%'; 
-                
-                gsap.to(fill, {
-                    width: width,
-                    duration: 1.5,
-                    ease: "power2.out",
-                    scrollTrigger: {
-                        trigger: skill,
-                        start: "top 95%"
-                    }
-                });
+                gsap.to(fill, { width: width, duration: 1.5, ease: "power2.out", scrollTrigger: { trigger: skill, start: "top 95%" } });
             });
         }
     </script>
